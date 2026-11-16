@@ -1,0 +1,37 @@
+# Krea Talento — contexto del proyecto
+
+Sitio web de **Krea Talento**, consultoría de recursos humanos en Costa Rica (pymes y profesionales).
+Servicios reales: asesoría laboral para pymes, gestión del talento, capacitación, coaching (10 sesiones), preparación de CV y entrevistas. NO ofrece reclutamiento.
+
+## Estructura del repo
+- `web/`    sitio público (Astro + Tailwind v4 + GSAP + Lenis). Se corre desde `web/` con `npm run dev`.
+- `docs/`   notas de reunión, alcance y decisiones.
+- `portal/` fase 2 (portal de clientes), aún sin crear. Se decide con presupuesto y clientes reales.
+
+## Estructura de `web/src`
+- `components/{layout,sections,ui}` · `layouts/` · `pages/` · `content/articulos/` (Markdown, futuro)
+- `data/` textos editables (contacto, servicios, nosotros, proceso, artículos, pilares). Los textos NO van dentro de los componentes.
+- `scripts/animations/` un módulo por animación; `scripts/main.ts` los inicia dentro de `gsap.matchMedia` con `prefers-reduced-motion: no-preference`.
+- `styles/` `tokens.css` (colores y tipografía del diseño de Stitch), `base.css`, `global.css`.
+
+## Diseño (reglas de la clienta)
+- Fondo blanco, azul y celeste, poco ruido visual.
+- PROHIBIDO: negro, verde y amarillo. (El logo actual trae verde y coral: pendiente de decisión.)
+- Animaciones bonitas pero sutiles; siempre con alternativa para "reducir movimiento".
+
+## Reglas de contenido
+- No inventar datos: teléfono, correo, dirección, horario, testimonios, precios ni clientes. Todo dato de contacto vive en `src/data/contacto.ts`; los campos vacíos se ocultan solos.
+- No hay precios ni pagos en línea: las propuestas se cotizan por paquete o proyecto.
+- Contacto por WhatsApp Business y correo; citas por Teams (enlace en `contacto.ts` cuando exista).
+- Misión, visión y valores son borrador hasta que la clienta los apruebe.
+
+## Pendientes conocidos
+- Número real de WhatsApp (hoy es un marcador), correo, dominio, enlace de agenda.
+- Decidir qué hacer con el logo (verde/coral vs paleta azul).
+- Despliegue en GitHub Pages desde `web/` (falta `site`/`base` en `astro.config.mjs` y un workflow).
+- Fase 2 (portal con login y base de datos para actas): sin definir.
+
+## Reglas de trabajo
+- Responde en español.
+- NO hagas commits ni push (en GitHub aparecería "claude" como coautor). Al terminar cambios, dame los comandos de git (add, commit, push) para ejecutarlos yo.
+- Verifica con `npm run build` antes de dar algo por terminado.

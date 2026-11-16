@@ -1,43 +1,21 @@
-# Astro Starter Kit: Minimal
+# Krea Talento · sitio web
+
+Astro + Tailwind v4 + GSAP + Lenis.
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev      # http://localhost:4321/KreaTalento/
+npm run build    # genera dist/
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Dónde editar
+- **Textos:** `src/data/` (`sitio.ts`, `servicios.ts`, `proceso.ts`, `nosotros.ts`, `pilares.ts`, `articulos.ts`).
+- **Contacto:** `src/data/contacto.ts`. Los campos vacíos se ocultan solos (botón flotante de WhatsApp, correo, agenda de Teams, redes).
+- **Colores y tipografía:** `src/styles/tokens.css`.
+- **Animaciones:** `src/scripts/animations/` (se activan en `src/scripts/main.ts` solo sin "reducir movimiento").
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Despliegue
+`.github/workflows/deploy.yml` publica en GitHub Pages en cada push a `main` que toque `web/`.
+Requiere activar en GitHub: *Settings → Pages → Source: GitHub Actions*.
+Con dominio propio: cambiar `site` y quitar `base` en `astro.config.mjs`, y agregar `public/CNAME`.

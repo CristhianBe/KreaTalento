@@ -1,0 +1,9 @@
+---
+interface Props { antetitulo?: string; titulo: string; texto?: string; centrado?: boolean }
+const { antetitulo, titulo, texto, centrado = true } = Astro.props;
+---
+<header class:list={['max-w-2xl mb-12 md:mb-16', centrado && 'mx-auto text-center']} data-reveal>
+  {antetitulo && <p class="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-celeste-600">{antetitulo}</p>}
+  <h2 class="text-3xl md:text-4xl font-bold">{titulo}</h2>
+  {texto && <p class="mt-4 text-lg text-tinta-suave">{texto}</p>}
+</header>

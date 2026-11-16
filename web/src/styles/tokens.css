@@ -1,0 +1,41 @@
+/*
+ * Tokens de diseño (Tailwind v4 @theme).
+ * Paleta de la clienta: blanco, azul y celeste. PROHIBIDO negro, verde y amarillo.
+ * Ajustar aquí si el diseño de Stitch define valores exactos distintos.
+ */
+@theme {
+  /* Azul principal */
+  --color-azul-50: #eef4fb;
+  --color-azul-100: #d6e4f5;
+  --color-azul-200: #aec8ea;
+  --color-azul-300: #7ea6db;
+  --color-azul-400: #4f80c6;
+  --color-azul-500: #2e63ad;
+  --color-azul-600: #1d4f91;
+  --color-azul-700: #183f74;
+  --color-azul-800: #15335c;
+  --color-azul-900: #122a4a;
+
+  /* Celeste */
+  --color-celeste-50: #f0f9fe;
+  --color-celeste-100: #ddf1fc;
+  --color-celeste-200: #b9e3f8;
+  --color-celeste-300: #85cff2;
+  --color-celeste-400: #4fb6e8;
+  --color-celeste-500: #2a9bd6;
+  --color-celeste-600: #1b7db5;
+
+  /* Texto (azul muy oscuro en lugar de negro) */
+  --color-tinta: #16304f;
+  --color-tinta-suave: #4a6382;
+  --color-borde: #dbe7f3;
+  --color-fondo: #ffffff;
+  --color-fondo-suave: #f5f9fd;
+
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-tarjeta: 1.25rem;
+  --shadow-suave: 0 1px 2px rgb(22 48 79 / 0.04), 0 8px 24px -12px rgb(29 79 145 / 0.18);
+  --shadow-elevada: 0 2px 4px rgb(22 48 79 / 0.05), 0 18px 40px -16px rgb(29 79 145 / 0.28);
+}

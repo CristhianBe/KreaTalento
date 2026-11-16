@@ -1,0 +1,35 @@
+---
+import Logo from './Logo.astro';
+import Icono from '../ui/Icono.astro';
+import { navegacion } from '../../data/sitio';
+---
+<header id="encabezado" class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-white/85 backdrop-blur-md transition-[border-color,box-shadow] duration-300 data-[scrolled=true]:border-borde data-[scrolled=true]:shadow-suave">
+  <div class="contenedor flex h-18 items-center justify-between">
+    <Logo />
+    <nav aria-label="Principal" class="hidden md:block">
+      <ul class="flex items-center gap-8">
+        {navegacion.map((item) => (
+          <li><a href={item.href} class="text-[0.95rem] font-medium text-tinta-suave transition-colors hover:text-azul-600">{item.etiqueta}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <button
+      id="boton-menu"
+      type="button"
+      class="inline-flex size-11 items-center justify-center rounded-full text-azul-700 hover:bg-azul-50 md:hidden"
+      aria-expanded="false"
+      aria-controls="menu-movil"
+      aria-label="Abrir menú"
+    >
+      <Icono nombre="menu" class="size-6 icono-abrir" />
+      <Icono nombre="cerrar" class="size-6 icono-cerrar hidden" />
+    </button>
+  </div>
+  <nav id="menu-movil" aria-label="Principal (móvil)" class="hidden border-t border-borde bg-white md:hidden">
+    <ul class="contenedor flex flex-col py-3">
+      {navegacion.map((item) => (
+        <li><a href={item.href} class="block py-3 text-lg font-medium text-azul-800">{item.etiqueta}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>

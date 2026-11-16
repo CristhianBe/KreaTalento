@@ -1,0 +1,20 @@
+---
+import EncabezadoSeccion from '../ui/EncabezadoSeccion.astro';
+import { articulos } from '../../data/articulos';
+---
+{articulos.length > 0 && (
+  <section id="articulos" class="seccion bg-white">
+    <div class="contenedor">
+      <EncabezadoSeccion antetitulo="Recursos" titulo="Artículos" />
+      <ul class="grid gap-6 md:grid-cols-3">
+        {articulos.map((a) => (
+          <li class="rounded-tarjeta bg-white p-6 ring-1 ring-borde shadow-suave" data-reveal>
+            {a.fecha && <p class="text-xs text-tinta-suave">{a.fecha}</p>}
+            <h3 class="mt-2 text-lg font-bold"><a href={a.href} class="hover:text-azul-600">{a.titulo}</a></h3>
+            <p class="mt-2 text-sm text-tinta-suave">{a.resumen}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

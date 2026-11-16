@@ -1,0 +1,19 @@
+---
+import Icono from '../ui/Icono.astro';
+import { pilares } from '../../data/pilares';
+---
+<section aria-label="Nuestro enfoque" class="border-y border-borde bg-white py-14">
+  <ul class="contenedor grid gap-8 md:grid-cols-3">
+    {pilares.map((p) => (
+      <li class="flex gap-4" data-reveal>
+        <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-azul-50 text-azul-600">
+          <Icono nombre={p.icono} />
+        </span>
+        <div>
+          <h3 class="text-lg font-bold">{p.titulo}</h3>
+          <p class="mt-1 text-tinta-suave">{p.texto}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>

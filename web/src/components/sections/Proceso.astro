@@ -1,0 +1,19 @@
+---
+import EncabezadoSeccion from '../ui/EncabezadoSeccion.astro';
+import { proceso } from '../../data/proceso';
+---
+<section id="proceso" class="seccion bg-white">
+  <div class="contenedor">
+    <EncabezadoSeccion antetitulo="Cómo trabajamos" titulo="Un proceso simple y cercano" />
+    <ol class="relative grid gap-8 md:grid-cols-4" data-proceso>
+      <span aria-hidden="true" class="absolute top-6 right-[12.5%] left-[12.5%] hidden h-0.5 origin-left bg-gradient-to-r from-azul-200 to-celeste-300 md:block" data-proceso-linea></span>
+      {proceso.map((paso, i) => (
+        <li class="relative text-center" data-reveal>
+          <span class="relative z-10 mx-auto inline-flex size-12 items-center justify-center rounded-full bg-azul-600 text-lg font-bold text-white ring-8 ring-white">{i + 1}</span>
+          <h3 class="mt-5 text-lg font-bold">{paso.titulo}</h3>
+          <p class="mt-2 text-tinta-suave">{paso.texto}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

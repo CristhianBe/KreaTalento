@@ -1,0 +1,41 @@
+---
+import Boton from '../ui/Boton.astro';
+import Icono from '../ui/Icono.astro';
+import { contacto, enlaceWhatsapp, hayCanales } from '../../data/contacto';
+const whatsapp = enlaceWhatsapp();
+const datos = [
+  contacto.ubicacion && { icono: 'ubicacion', texto: contacto.ubicacion },
+  contacto.horario && { icono: 'reloj', texto: contacto.horario },
+].filter(Boolean) as { icono: string; texto: string }[];
+---
+<section id="contacto" class="seccion bg-white">
+  <div class="contenedor">
+    <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-azul-600 via-azul-700 to-azul-800 px-6 py-14 text-center md:px-16 md:py-20" data-reveal>
+      <div aria-hidden="true" class="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-celeste-400/25 blur-3xl"></div>
+      <div class="relative">
+        <h2 class="text-3xl font-bold text-white md:text-4xl">Conversemos sobre tu equipo o tu carrera</h2>
+        <p class="mx-auto mt-4 max-w-xl text-lg text-azul-100">
+          Cuéntanos qué necesitas y te preparamos una propuesta a la medida. Las reuniones se realizan por Microsoft Teams.
+        </p>
+
+        {hayCanales ? (
+          <div class="mt-9 flex flex-wrap justify-center gap-4">
+            {whatsapp && <Boton href={whatsapp} variante="claro" externo><Icono nombre="whatsapp" class="size-5" />WhatsApp</Boton>}
+            {contacto.correo && <Boton href={`mailto:${contacto.correo}`} variante="claro"><Icono nombre="correo" class="size-5" />{contacto.correo}</Boton>}
+            {contacto.agendaTeams && <Boton href={contacto.agendaTeams} variante="claro" externo><Icono nombre="calendario" class="size-5" />Agendar cita</Boton>}
+          </div>
+        ) : (
+          <p class="mx-auto mt-9 max-w-md rounded-2xl bg-white/10 px-6 py-4 text-azul-50">
+            Muy pronto publicaremos nuestros canales de contacto.
+          </p>
+        )}
+
+        {datos.length > 0 && (
+          <ul class="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-azul-100">
+            {datos.map((d) => <li class="inline-flex items-center gap-2"><Icono nombre={d.icono} class="size-4" />{d.texto}</li>)}
+          </ul>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
