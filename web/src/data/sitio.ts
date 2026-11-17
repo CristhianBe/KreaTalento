@@ -21,4 +21,15 @@ export const hero = {
     'Acompañamos a empresas y profesionales con asesoría laboral, gestión del talento, capacitación y coaching, con soluciones a la medida de cada etapa.',
   ctaPrincipal: 'Conversemos',
   ctaSecundario: 'Ver servicios',
+  /** Frase con palabra que va rotando bajo el título. */
+  rotativo: {
+    prefijo: 'Te acompañamos en',
+    palabras: ['asesoría laboral', 'gestión del talento', 'capacitación', 'coaching', 'tu CV y entrevistas'],
+  },
 };
+
+/** Lema de marca (viene del logo). */
+export const lema = 'Hacemos crecer el talento de tu empresa.';
+
+/** Segunda fila de la cinta animada (la primera usa los nombres de los servicios). */
+export const cinta = ['Personas que crecen', 'Empresas que avanzan', 'Hacemos crecer el talento'];

@@ -10,6 +10,8 @@ import { animarRevelar } from './animations/revelar';
 import { animarTitulos } from './animations/titulos';
 import { animarTarjetas, inclinarTarjetas } from './animations/tarjetas';
 import { animarProceso } from './animations/proceso';
+import { animarRotativo } from './animations/rotativo';
+import { animarCinta } from './animations/cinta';
 import { barraProgreso, parallax, animarContacto, botonesMagneticos } from './animations/extras';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -32,7 +34,13 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   barraProgreso();
   parallax();
   animarContacto();
-  return () => detenerScroll();
+  const detenerRotativo = animarRotativo();
+  const detenerCinta = animarCinta();
+  return () => {
+    detenerScroll();
+    detenerRotativo();
+    detenerCinta?.();
+  };
 });
 
 // Efectos que dependen del puntero: solo con mouse/trackpad.

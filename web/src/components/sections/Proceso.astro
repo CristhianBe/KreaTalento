@@ -1,19 +1,36 @@
 ---
+/** Pasos del proceso como tarjetas que se apilan al hacer scroll (inspirado en "Scroll Stack" de React Bits). */
 import EncabezadoSeccion from '../ui/EncabezadoSeccion.astro';
 import { proceso } from '../../data/proceso';
+const estilos = [
+  'bg-white ring-1 ring-borde',
+  'bg-celeste-50 ring-1 ring-celeste-100',
+  'bg-azul-600 text-white',
+  'bg-azul-800 text-white',
+];
 ---
 <section id="proceso" class="seccion bg-white">
-  <div class="contenedor">
-    <EncabezadoSeccion antetitulo="Cómo trabajamos" titulo="Un proceso simple y cercano" />
-    <ol class="relative grid gap-8 md:grid-cols-4" data-proceso>
-      <span aria-hidden="true" class="absolute top-6 right-[12.5%] left-[12.5%] hidden h-0.5 origin-left bg-gradient-to-r from-azul-200 to-celeste-300 md:block" data-proceso-linea></span>
-      {proceso.map((paso, i) => (
-        <li class="relative text-center" data-reveal>
-          <span data-proceso-numero class="relative z-10 mx-auto inline-flex size-12 items-center justify-center rounded-full bg-azul-600 text-lg font-bold text-white ring-8 ring-white">{i + 1}</span>
-          <h3 class="mt-5 text-lg font-bold">{paso.titulo}</h3>
-          <p class="mt-2 text-tinta-suave">{paso.texto}</p>
-        </li>
-      ))}
+  <div class="contenedor grid gap-6 lg:grid-cols-[1fr_1.25fr] lg:gap-16">
+    <div class="lg:sticky lg:top-32 lg:self-start">
+      <EncabezadoSeccion antetitulo="Cómo trabajamos" titulo="Un proceso simple y cercano" centrado={false} />
+    </div>
+    <ol class="relative pb-4" data-proceso>
+      {proceso.map((paso, i) => {
+        const oscuro = i >= 2;
+        return (
+          <li class="sticky mb-6 last:mb-0" style={`top: calc(6.5rem + ${i * 1.25}rem)`} data-proceso-paso>
+            <article class:list={['flex min-h-[14rem] flex-col justify-between gap-8 rounded-[1.75rem] p-8 shadow-elevada md:min-h-[16rem] md:p-10', estilos[i % estilos.length]]} data-proceso-tarjeta>
+              <span data-proceso-numero class:list={['inline-flex size-14 items-center justify-center rounded-2xl text-xl font-extrabold', oscuro ? 'bg-white/15 text-white' : 'bg-azul-600 text-white']}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3 class:list={['text-2xl font-bold', oscuro && 'text-white']}>{paso.titulo}</h3>
+                <p class:list={['mt-2 text-lg', oscuro ? 'text-azul-100' : 'text-tinta-suave']}>{paso.texto}</p>
+              </div>
+            </article>
+          </li>
+        );
+      })}
     </ol>
   </div>
 </section>

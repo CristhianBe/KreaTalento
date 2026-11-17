@@ -1,0 +1,24 @@
+---
+/** Cinta de texto en movimiento que acelera con el scroll (inspirada en "Scroll Velocity" de React Bits). */
+import { servicios } from '../../data/servicios';
+import { cinta } from '../../data/sitio';
+const filas = [servicios.map((s) => s.titulo), cinta];
+---
+<section aria-hidden="true" class="cinta overflow-hidden border-y border-borde bg-white py-8 md:py-12" data-cinta>
+  {filas.map((fila, f) => (
+    <div class:list={['flex whitespace-nowrap', f > 0 && 'mt-3 md:mt-5']} data-cinta-fila data-direccion={f % 2 === 0 ? '-1' : '1'}>
+      <div class="flex shrink-0" data-cinta-pista>
+        {[0, 1].map(() => (
+          <ul class="flex shrink-0 items-center">
+            {[...fila, ...fila].map((texto) => (
+              <li class:list={['flex items-center gap-8 pr-8 text-3xl font-extrabold tracking-tight md:gap-12 md:pr-12 md:text-5xl', f % 2 === 0 ? 'text-azul-800' : 'texto-contorno']}>
+                {texto}
+                <span class="inline-block size-3 rounded-full bg-celeste-400 md:size-4"></span>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  ))}
+</section>

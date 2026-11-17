@@ -2,6 +2,7 @@
 import Boton from '../ui/Boton.astro';
 import Icono from '../ui/Icono.astro';
 import { contacto, enlaceWhatsapp, hayCanales } from '../../data/contacto';
+import { lema } from '../../data/sitio';
 const whatsapp = enlaceWhatsapp();
 const datos = [
   contacto.ubicacion && { icono: 'ubicacion', texto: contacto.ubicacion },
@@ -13,6 +14,7 @@ const datos = [
     <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-azul-600 via-azul-700 to-azul-800 px-6 py-14 text-center md:px-16 md:py-20" data-contacto-bloque>
       <div aria-hidden="true" class="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-celeste-400/25 blur-3xl" data-parallax="40"></div>
       <div class="relative">
+        <p class="texto-degradado mb-4 text-lg font-bold md:text-xl">{lema}</p>
         <h2 class="text-3xl font-bold text-white md:text-4xl">Conversemos sobre tu equipo o tu carrera</h2>
         <p class="mx-auto mt-4 max-w-xl text-lg text-azul-100">
           Cuéntanos qué necesitas y te preparamos una propuesta a la medida. Las reuniones se realizan por Microsoft Teams.

@@ -1,0 +1,16 @@
+---
+/**
+ * Palabra que va rotando dentro de una pastilla (inspirado en "Rotating Text" de React Bits,
+ * reescrito con GSAP). Sin JS o con "reducir movimiento" se queda la primera palabra.
+ */
+interface Props { palabras: string[] }
+const { palabras } = Astro.props;
+---
+<span class="rotativo" data-rotativo>
+  <span class="sr-only">{palabras.join(', ')}</span>
+  <span aria-hidden="true" class="rotativo-caja inline-grid overflow-hidden rounded-xl bg-azul-600 px-3 py-0.5 align-bottom text-white" data-rotativo-caja>
+    {palabras.map((p, i) => (
+      <span class="rotativo-palabra whitespace-nowrap" data-activa={i === 0 ? 'true' : 'false'} data-rotativo-palabra>{p}</span>
+    ))}
+  </span>
+</span>
