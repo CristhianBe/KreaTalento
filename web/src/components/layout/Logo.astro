@@ -1,13 +1,20 @@
 ---
-/** Logotipo provisional en texto (el logo oficial trae verde/coral: pendiente de decisión). */
+/** Logotipo oficial de Krea Talento. `claro` usa la versión blanca (para fondos azules). */
+import { Image } from 'astro:assets';
 import { url } from '../../lib/url';
 import { sitio } from '../../data/sitio';
-interface Props { claro?: boolean }
-const { claro = false } = Astro.props;
+import logo from '../../assets/images/logo-krea-talento.png';
+import logoBlanco from '../../assets/images/logo-krea-talento-blanco.png';
+interface Props { claro?: boolean; class?: string }
+const { claro = false, class: clase = 'h-12 w-auto' } = Astro.props;
 ---
-<a href={url('/')} class="inline-flex items-center gap-2.5" aria-label={`${sitio.nombre}, inicio`}>
-  <span class:list={['inline-flex size-9 items-center justify-center rounded-xl text-sm font-bold', claro ? 'bg-white text-azul-700' : 'bg-azul-600 text-white']}>KT</span>
-  <span class:list={['text-lg font-bold tracking-tight', claro ? 'text-white' : 'text-azul-800']}>
-    Krea <span class={claro ? 'text-celeste-200' : 'text-celeste-500'}>Talento</span>
-  </span>
+<a href={url('/')} class="inline-flex shrink-0 items-center" aria-label={`${sitio.nombre}, inicio`} data-logo>
+  <Image
+    src={claro ? logoBlanco : logo}
+    alt={sitio.nombre}
+    widths={[160, 320, 480]}
+    sizes="160px"
+    class:list={[clase, 'transition-[height] duration-300']}
+    loading="eager"
+  />
 </a>

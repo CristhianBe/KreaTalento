@@ -16,19 +16,21 @@ Servicios reales: asesoría laboral para pymes, gestión del talento, capacitaci
 
 ## Diseño (reglas de la clienta)
 - Fondo blanco, azul y celeste, poco ruido visual.
-- PROHIBIDO: negro, verde y amarillo. (El logo actual trae verde y coral: pendiente de decisión.)
+- PROHIBIDO: negro, verde y amarillo.
+- Logo oficial (azul): `web/src/assets/images/logo-krea-talento.png` y versión blanca `logo-krea-talento-blanco.png` (fondo transparente).
 - Animaciones bonitas pero sutiles; siempre con alternativa para "reducir movimiento".
 
 ## Reglas de contenido
 - No inventar datos: teléfono, correo, dirección, horario, testimonios, precios ni clientes. Todo dato de contacto vive en `src/data/contacto.ts`; los campos vacíos se ocultan solos.
 - No hay precios ni pagos en línea: las propuestas se cotizan por paquete o proyecto.
 - Contacto por WhatsApp Business y correo; citas por Teams (enlace en `contacto.ts` cuando exista).
-- Misión, visión y valores son borrador hasta que la clienta los apruebe.
+- Misión, visión, valores y datos de la fundadora (`src/data/nosotros.ts`) quedan VACÍOS hasta que la dueña los dé; vacío = no se muestra (sin avisos de "pendiente").
+- Tarjetas de servicio: frase corta (`gancho`) en la tarjeta; el detalle se abre en una ventana al hacer clic.
 
 ## Pendientes conocidos
-- Número real de WhatsApp (hoy es un marcador), correo, dominio, enlace de agenda.
-- Decidir qué hacer con el logo (verde/coral vs paleta azul).
-- Despliegue en GitHub Pages desde `web/` (falta `site`/`base` en `astro.config.mjs` y un workflow).
+- Número real de WhatsApp, correo, dominio, enlace de agenda.
+- Misión, visión, valores y presentación de la fundadora.
+- Activar GitHub Pages (Settings → Pages → Source: GitHub Actions) y confirmar el primer despliegue.
 - Fase 2 (portal con login y base de datos para actas): sin definir.
 
 ## Reglas de trabajo

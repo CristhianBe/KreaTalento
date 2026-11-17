@@ -1,33 +1,50 @@
 ---
 import EncabezadoSeccion from '../ui/EncabezadoSeccion.astro';
 import { nosotros } from '../../data/nosotros';
+const { mision, vision, valores, fundadora } = nosotros;
+const hayFundadora = Boolean(fundadora.nombre || fundadora.bio);
 ---
 <section id="nosotros" class="seccion bg-fondo-suave">
   <div class="contenedor">
     <EncabezadoSeccion antetitulo="Nosotros" titulo="Acompañamos a personas y equipos" texto={nosotros.intro} />
-    {nosotros.borrador && (
-      <p class="mx-auto -mt-6 mb-10 w-fit rounded-full bg-azul-50 px-4 py-1.5 text-xs font-medium text-azul-600 ring-1 ring-azul-100">
-        Contenido en revisión
-      </p>
+
+    {hayFundadora && (
+      <article class="mx-auto mb-12 max-w-2xl rounded-tarjeta bg-white p-8 text-center ring-1 ring-borde" data-reveal>
+        {fundadora.nombre && <h3 class="text-xl font-bold">{fundadora.nombre}</h3>}
+        {fundadora.cargo && <p class="mt-1 text-sm font-semibold text-celeste-600">{fundadora.cargo}</p>}
+        {fundadora.bio && <p class="mt-4 text-tinta-suave">{fundadora.bio}</p>}
+      </article>
     )}
-    <div class="grid gap-6 md:grid-cols-2">
-      <article class="rounded-tarjeta bg-azul-600 p-8 text-azul-50" data-reveal>
-        <h3 class="text-xl font-bold text-white">Misión</h3>
-        <p class="mt-3">{nosotros.mision}</p>
-      </article>
-      <article class="rounded-tarjeta bg-white p-8 ring-1 ring-borde" data-reveal>
-        <h3 class="text-xl font-bold">Visión</h3>
-        <p class="mt-3 text-tinta-suave">{nosotros.vision}</p>
-      </article>
-    </div>
-    <h3 class="mt-14 mb-6 text-center text-2xl font-bold" data-reveal>Valores</h3>
-    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {nosotros.valores.map((v) => (
-        <li class="rounded-tarjeta bg-white p-6 ring-1 ring-borde" data-reveal>
-          <p class="font-bold text-azul-700">{v.titulo}</p>
-          <p class="mt-1 text-sm text-tinta-suave">{v.texto}</p>
-        </li>
-      ))}
-    </ul>
+
+    {(mision || vision) && (
+      <div class="grid gap-6 md:grid-cols-2">
+        {mision && (
+          <article class="rounded-tarjeta bg-azul-600 p-8 text-azul-50" data-reveal>
+            <h3 class="text-xl font-bold text-white">Misión</h3>
+            <p class="mt-3">{mision}</p>
+          </article>
+        )}
+        {vision && (
+          <article class="rounded-tarjeta bg-white p-8 ring-1 ring-borde" data-reveal>
+            <h3 class="text-xl font-bold">Visión</h3>
+            <p class="mt-3 text-tinta-suave">{vision}</p>
+          </article>
+        )}
+      </div>
+    )}
+
+    {valores.length > 0 && (
+      <>
+        <h3 class="mt-14 mb-6 text-center text-2xl font-bold" data-reveal>Valores</h3>
+        <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {valores.map((v) => (
+            <li class="rounded-tarjeta bg-white p-6 ring-1 ring-borde" data-reveal>
+              <p class="font-bold text-azul-700">{v.titulo}</p>
+              <p class="mt-1 text-sm text-tinta-suave">{v.texto}</p>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
   </div>
 </section>

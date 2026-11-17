@@ -1,7 +1,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: 5rem;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -66,4 +66,57 @@
   @media (min-width: 768px) {
     .seccion { padding-block: 7rem; }
   }
+}
+
+@layer components {
+  /* Intro con el logo */
+  .con-intro .intro {
+    display: flex;
+    animation: intro-seguro 0.4s ease 3.5s forwards; /* respaldo si el JS no corre */
+  }
+  @keyframes intro-seguro {
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  /* Subrayado animado en la navegación */
+  .enlace-nav::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.35rem;
+    height: 2px;
+    width: 100%;
+    border-radius: 9999px;
+    background: var(--color-celeste-400);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .enlace-nav:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Luz que sigue al puntero en las tarjetas de servicio */
+  .tarjeta-servicio .foco {
+    background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 50%), rgb(79 182 232 / 0.14), transparent 60%);
+  }
+  .tarjeta-servicio {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* Ventana de detalle de servicio */
+  .dialogo-servicio::backdrop {
+    background: rgb(18 42 74 / 0.45);
+    backdrop-filter: blur(6px);
+  }
+  .dialogo-servicio[open] {
+    animation: dialogo-entrar 0.25s ease-out;
+  }
+  @keyframes dialogo-entrar {
+    from { opacity: 0; transform: translateY(12px); }
+  }
+  /* Cuando GSAP anima la ventana, desactiva la animación CSS por defecto */
+  .dialogo-servicio.animado[open] { animation: none; }
 }

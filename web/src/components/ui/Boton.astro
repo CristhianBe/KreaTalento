@@ -4,8 +4,9 @@ interface Props {
   variante?: 'primario' | 'secundario' | 'claro';
   externo?: boolean;
   class?: string;
+  [atributo: string]: unknown;
 }
-const { href, variante = 'primario', externo = false, class: clase = '' } = Astro.props;
+const { href, variante = 'primario', externo = false, class: clase = '', ...resto } = Astro.props;
 const estilos = {
   primario: 'bg-azul-600 text-white hover:bg-azul-700 shadow-suave',
   secundario: 'bg-white text-azul-700 ring-1 ring-azul-200 hover:ring-azul-400 hover:bg-azul-50',
@@ -19,7 +20,9 @@ const estilos = {
     estilos[variante],
     clase,
   ]}
+  data-magnetico
   {...(externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+  {...resto}
 >
   <slot />
 </a>

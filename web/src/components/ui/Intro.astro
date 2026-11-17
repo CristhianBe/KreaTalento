@@ -1,0 +1,16 @@
+---
+/**
+ * Pantalla de entrada con el logo (solo la primera visita de la sesión y
+ * solo si no se pidió "reducir movimiento"). La activa el script en línea de
+ * BaseLayout añadiendo la clase `con-intro` a <html>; si el JS fallara, una
+ * animación CSS la oculta sola a los pocos segundos.
+ */
+import { Image } from 'astro:assets';
+import logo from '../../assets/images/logo-krea-talento.png';
+---
+<div id="intro" aria-hidden="true" class="intro fixed inset-0 z-[100] hidden items-center justify-center bg-white">
+  <div class="relative">
+    <Image src={logo} alt="" widths={[320, 640]} sizes="320px" class="h-auto w-64 md:w-80" loading="eager" data-intro-logo />
+    <span class="absolute -bottom-6 left-0 h-0.5 w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-azul-500 to-celeste-400" data-intro-barra></span>
+  </div>
+</div>

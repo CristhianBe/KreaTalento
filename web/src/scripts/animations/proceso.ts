@@ -1,13 +1,23 @@
 import { gsap } from 'gsap';
 
-/** Dibuja la línea que une los pasos del proceso al entrar en pantalla. */
+/** La línea del proceso se dibuja con el scroll y cada número aparece con rebote. */
 export function animarProceso() {
-  const linea = document.querySelector('[data-proceso-linea]');
-  if (!linea) return;
-  gsap.from(linea, {
-    scaleX: 0,
-    duration: 1.4,
-    ease: 'power2.inOut',
-    scrollTrigger: { trigger: '[data-proceso]', start: 'top 80%', once: true },
+  const contenedor = document.querySelector('[data-proceso]');
+  if (!contenedor) return;
+  const linea = contenedor.querySelector('[data-proceso-linea]');
+  if (linea) {
+    gsap.fromTo(linea, { scaleX: 0 }, {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: { trigger: contenedor, start: 'top 75%', end: 'bottom 55%', scrub: 0.8 },
+    });
+  }
+  gsap.from(contenedor.querySelectorAll('[data-proceso-numero]'), {
+    scale: 0,
+    rotate: -90,
+    duration: 0.8,
+    ease: 'back.out(2)',
+    stagger: 0.18,
+    scrollTrigger: { trigger: contenedor, start: 'top 78%', once: true },
   });
 }

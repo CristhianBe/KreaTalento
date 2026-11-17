@@ -3,13 +3,15 @@ import Logo from './Logo.astro';
 import Icono from '../ui/Icono.astro';
 import { navegacion } from '../../data/sitio';
 ---
-<header id="encabezado" class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-white/85 backdrop-blur-md transition-[border-color,box-shadow] duration-300 data-[scrolled=true]:border-borde data-[scrolled=true]:shadow-suave">
-  <div class="contenedor flex h-18 items-center justify-between">
-    <Logo />
+<header id="encabezado" class="group fixed inset-x-0 top-0 z-50 border-b border-transparent bg-white/85 backdrop-blur-md transition-[border-color,box-shadow] duration-300 data-[scrolled=true]:border-borde data-[scrolled=true]:shadow-suave">
+  <div class="contenedor flex h-20 items-center justify-between transition-[height] duration-300 group-data-[scrolled=true]:h-16">
+    <Logo class="h-14 w-auto group-data-[scrolled=true]:h-11" />
     <nav aria-label="Principal" class="hidden md:block">
       <ul class="flex items-center gap-8">
         {navegacion.map((item) => (
-          <li><a href={item.href} class="text-[0.95rem] font-medium text-tinta-suave transition-colors hover:text-azul-600">{item.etiqueta}</a></li>
+          <li>
+            <a href={item.href} class="enlace-nav relative text-[0.95rem] font-medium text-tinta-suave transition-colors hover:text-azul-600">{item.etiqueta}</a>
+          </li>
         ))}
       </ul>
     </nav>
@@ -32,4 +34,5 @@ import { navegacion } from '../../data/sitio';
       ))}
     </ul>
   </nav>
+  <span aria-hidden="true" class="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-gradient-to-r from-azul-500 via-celeste-400 to-celeste-300" data-progreso></span>
 </header>
