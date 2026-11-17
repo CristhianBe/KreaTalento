@@ -17,7 +17,7 @@ Servicios reales: asesoría laboral para empresas, gestión del talento, capacit
 ## Diseño (reglas de la clienta)
 - Fondo blanco, azul y celeste, poco ruido visual.
 - PROHIBIDO: negro, verde y amarillo.
-- Logo oficial (azul): `web/src/assets/images/logo-krea-talento.png` y versión blanca `logo-krea-talento-blanco.png` (fondo transparente).
+- Logo oficial (elegido por la clienta, nov 2026; trae turquesa, coral y verde: es excepción a la regla de colores, solo en el logo): `web/src/assets/images/logo-krea-talento.png`, versión blanca `logo-krea-talento-blanco.png`, completo con lema `logo-krea-talento-completo.png` (intro) e isotipo `isotipo-krea-talento.png` (favicon). Lema de marca: "Hacemos crecer el talento de tu empresa."
 - Animaciones bonitas pero sutiles; siempre con alternativa para "reducir movimiento".
 
 ## Reglas de contenido

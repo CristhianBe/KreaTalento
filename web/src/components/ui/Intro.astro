@@ -6,11 +6,11 @@
  * animación CSS la oculta sola a los pocos segundos.
  */
 import { Image } from 'astro:assets';
-import logo from '../../assets/images/logo-krea-talento.png';
+import logo from '../../assets/images/logo-krea-talento-completo.png';
 ---
 <div id="intro" aria-hidden="true" class="intro fixed inset-0 z-[100] hidden items-center justify-center bg-white">
   <div class="relative">
-    <Image src={logo} alt="" widths={[320, 640]} sizes="320px" class="h-auto w-64 md:w-80" loading="eager" data-intro-logo />
+    <Image src={logo} alt="" widths={[320, 640]} sizes="320px" class="h-auto w-60 md:w-72" loading="eager" data-intro-logo />
     <span class="absolute -bottom-6 left-0 h-0.5 w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-azul-500 to-celeste-400" data-intro-barra></span>
   </div>
 </div>
