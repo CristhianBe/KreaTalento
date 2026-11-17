@@ -1,7 +1,7 @@
 # Krea Talento — contexto del proyecto
 
-Sitio web de **Krea Talento**, consultoría de recursos humanos en Costa Rica (pymes y profesionales).
-Servicios reales: asesoría laboral para pymes, gestión del talento, capacitación, coaching (10 sesiones), preparación de CV y entrevistas. NO ofrece reclutamiento.
+Sitio web de **Krea Talento**, consultoría de recursos humanos en Costa Rica (empresas, principalmente pequeñas, y profesionales). No usar la palabra "pymes" en el sitio.
+Servicios reales: asesoría laboral para empresas, gestión del talento, capacitación, coaching (10 sesiones), preparación de CV y entrevistas. NO ofrece reclutamiento.
 
 ## Estructura del repo
 - `web/`    sitio público (Astro + Tailwind v4 + GSAP + Lenis). Se corre desde `web/` con `npm run dev`.

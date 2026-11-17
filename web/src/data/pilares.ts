@@ -3,7 +3,7 @@ export const pilares = [
   {
     icono: 'escudo',
     titulo: 'Cumplimiento laboral',
-    texto: 'Orientación clara para que tu pyme tome decisiones laborales con respaldo y tranquilidad.',
+    texto: 'Orientación clara para que tu empresa tome decisiones laborales con respaldo y tranquilidad.',
   },
   {
     icono: 'personas',

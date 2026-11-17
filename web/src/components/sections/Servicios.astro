@@ -75,6 +75,11 @@ import { servicios, notaServicios } from '../../data/servicios';
             </li>
           ))}
         </ul>
+        {s.modalidad && (
+          <p class="mt-6 inline-flex items-center gap-2 rounded-full bg-azul-50 px-4 py-1.5 text-sm font-medium text-azul-700" data-dialogo-item>
+            <Icono nombre="calendario" class="size-4" />{s.modalidad}
+          </p>
+        )}
         <div class="mt-8 flex flex-wrap gap-3" data-dialogo-item>
           <a href="#contacto" class="inline-flex items-center gap-2 rounded-full bg-azul-600 px-6 py-3 text-[0.95rem] font-semibold text-white transition-colors hover:bg-azul-700" data-cerrar-servicio>
             Solicitar propuesta <Icono nombre="flecha" class="size-4" />

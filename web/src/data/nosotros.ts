@@ -5,7 +5,7 @@
  */
 export const nosotros = {
   intro:
-    'Krea Talento es una consultoría de recursos humanos en Costa Rica que acompaña a pymes y profesionales a desarrollar su talento y fortalecer sus equipos.',
+    'Krea Talento es una consultoría de recursos humanos en Costa Rica que acompaña a empresas y profesionales a desarrollar su talento y fortalecer sus equipos.',
   mision: '',
   vision: '',
   valores: [] as { titulo: string; texto: string }[],
