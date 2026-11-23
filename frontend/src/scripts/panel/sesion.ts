@@ -1,21 +1,15 @@
 import { login } from '../../data/login';
-import { panel } from '../../data/panel';
-import { obtenerSesion, cerrarSesion, iniciales } from '../../lib/sesion';
+import { obtenerSesion, cerrarSesion } from '../../lib/sesion';
 import { url } from '../../lib/url';
 
 const irAlLogin = () => window.location.replace(url(login.ruta));
 
-/** Muestra el usuario de la sesión de prueba y activa "Cerrar sesión". */
+/**
+ * Sin sesión de prueba → al login; activa "Cerrar sesión".
+ * El saludo y el avatar se pintan antes, con el script en línea de BarraSuperior.
+ */
 export function iniciarSesionPanel() {
-  const sesion = obtenerSesion();
-  if (!sesion) return irAlLogin();
-
-  document.querySelectorAll('[data-panel-nombre]').forEach((el) => (el.textContent = sesion.nombre));
-  document.querySelectorAll('[data-panel-correo]').forEach((el) => (el.textContent = sesion.correo));
-  const hora = new Date().getHours();
-  const saludo = hora < 12 ? panel.saludos.manana : hora < 19 ? panel.saludos.tarde : panel.saludos.noche;
-  document.querySelectorAll('[data-panel-saludo]').forEach((el) => (el.textContent = `${saludo}, ${sesion.nombre}`));
-  document.querySelectorAll('[data-panel-iniciales]').forEach((el) => (el.textContent = iniciales(sesion.nombre)));
+  if (!obtenerSesion()) return irAlLogin();
 
   document.querySelectorAll('[data-panel-salir]').forEach((boton) => {
     boton.addEventListener('click', () => {

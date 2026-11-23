@@ -1,13 +1,12 @@
 ---
 /**
- * Barra superior del panel: menú (móvil), saludo con la ruta actual, modo noche y avatar.
- * El saludo ("Buenas noches, Sebas") lo completa `scripts/panel/sesion.ts`.
+ * Barra superior del panel: menú (móvil), saludo, modo noche y avatar del usuario.
+ * El saludo ("Buenas noches, Sebas") y el avatar se completan con el script en línea de abajo,
+ * antes de pintar, para que no se vea primero vacío.
  */
 import Icono from '../ui/Icono.astro';
 import { panel } from '../../data/panel';
-
-interface Props { titulo: string }
-const { titulo } = Astro.props;
+import { claveSesion } from '../../lib/sesion';
 ---
 <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-md dark:bg-noche-900/90">
   <div class="flex h-20 items-center justify-between gap-4 px-5 md:px-8">
@@ -22,14 +21,7 @@ const { titulo } = Astro.props;
       >
         <Icono nombre="menu" class="size-6" />
       </button>
-      <div class="min-w-0">
-        <p class="truncate font-display text-lg font-bold text-azul-800 md:text-xl dark:text-noche-texto" data-panel-saludo>{panel.nombre}</p>
-        <p class="flex items-center gap-1.5 text-xs font-medium text-tinta-suave dark:text-noche-suave">
-          {panel.nombre}
-          <Icono nombre="chevron-der" class="size-3.5 text-azul-300 dark:text-noche-600" />
-          <span class="font-semibold text-azul-600 dark:text-celeste-300">{titulo}</span>
-        </p>
-      </div>
+      <p class="truncate font-display text-lg font-bold text-azul-800 md:text-xl dark:text-noche-texto" data-panel-saludo>{panel.nombre}</p>
     </div>
     <div class="flex shrink-0 items-center gap-3">
       <button
@@ -43,7 +35,24 @@ const { titulo } = Astro.props;
         <Icono nombre="luna" class="size-5 dark:hidden" />
         <Icono nombre="sol" class="hidden size-5 dark:block" />
       </button>
-      <span class="inline-flex size-10 items-center justify-center rounded-full bg-azul-600 font-bold text-white ring-4 ring-celeste-100 dark:bg-acento dark:ring-noche-700" aria-hidden="true" data-panel-iniciales></span>
+      <span class="inline-flex size-10 items-center justify-center rounded-full bg-azul-600 font-bold text-white ring-4 ring-celeste-100 dark:bg-acento dark:ring-noche-700" role="img" data-panel-iniciales></span>
     </div>
   </div>
 </header>
+<script is:inline define:vars={{ claveSesion, saludos: panel.saludos }}>
+  // Antes de pintar: saludo según la hora y avatar con iniciales (al pasar el mouse: nombre y correo).
+  try {
+    const sesion = JSON.parse(sessionStorage.getItem(claveSesion) || 'null');
+    if (sesion) {
+      const hora = new Date().getHours();
+      const saludo = hora < 12 ? saludos.manana : hora < 19 ? saludos.tarde : saludos.noche;
+      const iniciales = sesion.nombre.trim().split(/\s+/).slice(0, 2).map((parte) => parte[0].toUpperCase()).join('');
+      document.querySelectorAll('[data-panel-saludo]').forEach((el) => (el.textContent = `${saludo}, ${sesion.nombre}`));
+      document.querySelectorAll('[data-panel-iniciales]').forEach((el) => {
+        el.textContent = iniciales;
+        el.title = `${sesion.nombre} · ${sesion.correo}`;
+        el.setAttribute('aria-label', `${sesion.nombre} (${sesion.correo})`);
+      });
+    }
+  } catch (e) {}
+</script>

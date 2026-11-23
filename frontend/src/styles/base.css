@@ -124,6 +124,13 @@
   /* Cuando GSAP anima la ventana, desactiva la animación CSS por defecto */
   .dialogo-servicio.animado[open] { animation: none; }
 
+  /* Ventanas del panel (p. ej. detalle de cliente): sin animación */
+  .dialogo-panel::backdrop {
+    background: rgb(18 42 74 / 0.45);
+    backdrop-filter: blur(6px);
+  }
+  [data-tema='oscuro'] .dialogo-panel::backdrop { background: rgb(9 16 28 / 0.65); }
+
   /* Campos de formulario (login) */
   .campo {
     width: 100%;

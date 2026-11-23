@@ -1,6 +1,7 @@
 ---
 /** Lista de notificaciones con filtro y "marcar como leída" (`scripts/panel/notificaciones.ts`). */
 import Icono from '../ui/Icono.astro';
+import { claveNotifLeidas } from '../../lib/panel';
 import { notificaciones, tiposNotificacion, textosNotificaciones as textos, type TipoNotificacion } from '../../data/panel';
 
 const estilos: Record<TipoNotificacion, { icono: string; etiqueta: string }> = {
@@ -78,3 +79,20 @@ const estilos: Record<TipoNotificacion, { icono: string; etiqueta: string }> = {
     {textos.vacio}
   </p>
 </section>
+
+<script is:inline define:vars={{ claveNotifLeidas }}>
+  // Antes de pintar: marca como leídas las que ya se leyeron en esta sesión y pone los totales
+  // de los filtros (sin parpadeo). Lo demás (clics, filtros) lo maneja scripts/panel/notificaciones.ts.
+  try {
+    const leidas = new Set(JSON.parse(sessionStorage.getItem(claveNotifLeidas) || '[]'));
+    const items = [...document.querySelectorAll('[data-notificacion]')];
+    items.forEach((item) => {
+      if (leidas.has(item.dataset.notificacion)) item.dataset.leida = 'true';
+    });
+    const noLeidas = items.filter((item) => item.dataset.leida === 'false').length;
+    const totales = { todas: items.length, 'no-leidas': noLeidas };
+    document.querySelectorAll('[data-notif-total]').forEach((el) => (el.textContent = String(totales[el.dataset.notifTotal])));
+    const marcarTodas = document.querySelector('[data-notif-marcar-todas]');
+    if (marcarTodas) marcarTodas.disabled = noLeidas === 0;
+  } catch (e) {}
+</script>

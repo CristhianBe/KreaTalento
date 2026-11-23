@@ -2,16 +2,17 @@
 /**
  * Barra lateral del panel. En escritorio es la primera columna del layout (fija al
  * hacer scroll); en móvil se abre como cajón con el botón de menú de la barra superior (`scripts/panel/menu.ts`).
- * El nombre y correo del usuario los completa `scripts/panel/sesion.ts`.
  */
 import Logo from '../layout/Logo.astro';
 import Icono from '../ui/Icono.astro';
 import { panel, navegacionPanel, notificaciones, type SeccionPanel } from '../../data/panel';
 import { url } from '../../lib/url';
+import { claveNotifLeidas } from '../../lib/panel';
 
 interface Props { activo: SeccionPanel }
 const { activo } = Astro.props;
-const noLeidas = notificaciones.filter((n) => !n.leida).length;
+const pendientes = notificaciones.filter((n) => !n.leida).map((n) => n.id);
+const noLeidas = pendientes.length;
 ---
 <div aria-hidden="true" class="fixed inset-0 z-40 hidden bg-azul-900/40 backdrop-blur-sm lg:hidden" data-panel-fondo></div>
 
@@ -21,6 +22,22 @@ const noLeidas = notificaciones.filter((n) => !n.leida).length;
   aria-label="Menú del panel"
   data-abierto="false"
 >
+  <!-- Borde arrastrable (solo escritorio): cambia el ancho de la barra (`scripts/panel/redimensionar.ts`). -->
+  <div
+    role="separator"
+    aria-orientation="vertical"
+    aria-label={panel.anchoMenu}
+    aria-controls="panel-lateral"
+    title={panel.anchoMenuAyuda}
+    tabindex="0"
+    class="group/borde absolute inset-y-0 -right-1.5 z-40 hidden w-3 cursor-col-resize touch-none outline-none lg:block"
+    data-panel-redimensionar
+    data-arrastrando="false"
+  >
+    <span aria-hidden="true" class="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-borde transition-[width,background-color] duration-200 group-hover/borde:w-[3px] group-hover/borde:bg-azul-300 group-focus-visible/borde:w-[3px] group-focus-visible/borde:bg-celeste-400 group-data-[arrastrando=true]/borde:w-[3px] group-data-[arrastrando=true]/borde:bg-azul-500 dark:bg-noche-700 dark:group-hover/borde:bg-noche-600 dark:group-data-[arrastrando=true]/borde:bg-acento"></span>
+    <span aria-hidden="true" class="absolute top-1/2 left-1/2 h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-azul-300 opacity-0 transition-opacity duration-200 group-hover/borde:opacity-100 group-focus-visible/borde:opacity-100 group-data-[arrastrando=true]/borde:bg-azul-500 group-data-[arrastrando=true]/borde:opacity-100 dark:bg-noche-600 dark:group-data-[arrastrando=true]/borde:bg-acento"></span>
+  </div>
+
   <div class="flex h-20 items-center justify-between px-6">
     <span class="dark:hidden"><Logo class="h-11 w-auto" /></span>
     <span class="hidden dark:inline-flex"><Logo claro class="h-11 w-auto" /></span>
@@ -32,14 +49,6 @@ const noLeidas = notificaciones.filter((n) => !n.leida).length;
     >
       <Icono nombre="cerrar" class="size-5" />
     </button>
-  </div>
-
-  <div class="flex items-center gap-3 px-6 py-6">
-    <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-azul-600 text-lg font-bold text-white dark:bg-acento ring-4 ring-celeste-100 dark:ring-noche-700" aria-hidden="true" data-panel-iniciales></span>
-    <div class="min-w-0">
-      <p class="truncate font-bold text-azul-800 dark:text-noche-texto" data-panel-nombre></p>
-      <p class="truncate text-sm text-tinta-suave dark:text-noche-suave" data-panel-correo></p>
-    </div>
   </div>
 
   <nav class="flex-1 overflow-y-auto px-4 py-6" aria-label={panel.nombre}>
@@ -79,6 +88,17 @@ const noLeidas = notificaciones.filter((n) => !n.leida).length;
         );
       })}
     </ul>
+    <script is:inline define:vars={{ claveNotifLeidas, pendientes }}>
+      // Antes de pintar: descuenta las notificaciones ya leídas en esta sesión (sin parpadeo del contador).
+      try {
+        const leidas = new Set(JSON.parse(sessionStorage.getItem(claveNotifLeidas) || '[]'));
+        const total = pendientes.filter((id) => !leidas.has(id)).length;
+        document.querySelectorAll('[data-contador-notificaciones]').forEach((el) => {
+          el.textContent = String(total);
+          el.classList.toggle('hidden', total === 0);
+        });
+      } catch (e) {}
+    </script>
   </nav>
 
   <div class="space-y-1 px-4 py-5">

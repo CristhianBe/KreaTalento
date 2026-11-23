@@ -1,10 +1,9 @@
-import { notificaciones } from '../../data/panel';
+import { claveNotifLeidas as claveLeidas } from '../../lib/panel';
 
-/**
- * Notificaciones leídas en esta sesión (sessionStorage), para que el contador de la
- * barra lateral coincida en todas las páginas del panel. Con el backend se guardará allá.
+/*
+ * El estado inicial (contador, leídas y totales) lo ponen los scripts en línea de
+ * BarraLateral y Notificaciones antes de pintar. Aquí solo se manejan los cambios.
  */
-const claveLeidas = 'kt-notif-leidas';
 
 function leidasGuardadas(): Set<string> {
   try {
@@ -26,12 +25,6 @@ function mostrarContador(noLeidas: number) {
     el.textContent = String(noLeidas);
     el.classList.toggle('hidden', noLeidas === 0);
   });
-}
-
-/** Contador de la barra lateral, en cualquier página del panel. */
-export function iniciarContadorNotificaciones() {
-  const leidas = leidasGuardadas();
-  mostrarContador(notificaciones.filter((n) => !n.leida && !leidas.has(n.id)).length);
 }
 
 /** Página de notificaciones: filtro "Todas / No leídas" y marcar como leída. */
@@ -67,11 +60,6 @@ export function iniciarNotificaciones() {
     item.dataset.leida = 'true';
     if (item.dataset.notificacion) leidas.add(item.dataset.notificacion);
   };
-
-  // Aplica lo que ya se había leído en esta sesión.
-  items.forEach((item) => {
-    if (leidas.has(item.dataset.notificacion ?? '')) marcar(item);
-  });
 
   items.forEach((item) => {
     item.querySelector('[data-notif-leer]')?.addEventListener('click', () => {

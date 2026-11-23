@@ -1,0 +1,230 @@
+---
+/**
+ * Lista de clientes: resumen, filtros por estado, buscador, tabla y una ventana (<dialog>)
+ * de detalles con documentos por cliente. Todo sale listo desde el servidor (sin parpadeo);
+ * `scripts/panel/clientes.ts` solo maneja filtros, búsqueda, orden y abrir/cerrar ventanas.
+ */
+import Icono from '../ui/Icono.astro';
+import { clientes, estadosCliente, documentoEjemplo, textosClientes as textos, type EstadoCliente } from '../../data/panel';
+import { normalizar, aNombreArchivo } from '../../lib/texto';
+import { url } from '../../lib/url';
+
+const total = clientes.length;
+const porEstado = (estado: EstadoCliente) => clientes.filter((c) => c.estado === estado).length;
+const totales: Record<string, number> = { todos: total, nuevo: porEstado('nuevo'), concurrente: porEstado('concurrente') };
+const ordenados = [...clientes].sort((a, b) => `${a.nombre} ${a.apellido}`.localeCompare(`${b.nombre} ${b.apellido}`, 'es'));
+
+const resumen = [
+  { etiqueta: textos.resumen.total, valor: total, icono: 'personas', estilo: 'bg-azul-600 text-white dark:bg-acento' },
+  { etiqueta: textos.resumen.nuevo, valor: totales.nuevo, icono: 'usuario', estilo: 'bg-celeste-100 text-celeste-600 dark:bg-celeste-500/20 dark:text-celeste-300' },
+  { etiqueta: textos.resumen.concurrente, valor: totales.concurrente, icono: 'check', estilo: 'bg-azul-100 text-azul-700 dark:bg-azul-500/25 dark:text-noche-texto' },
+];
+
+const estiloEstado: Record<EstadoCliente, string> = {
+  nuevo: 'bg-celeste-50 text-celeste-600 ring-celeste-200 dark:bg-celeste-500/15 dark:text-celeste-300 dark:ring-celeste-500/30',
+  concurrente: 'bg-azul-50 text-azul-700 ring-azul-200 dark:bg-azul-500/20 dark:text-noche-texto dark:ring-azul-400/30',
+};
+const tarjeta = 'rounded-tarjeta bg-white shadow-suave ring-1 ring-borde dark:bg-noche-850 dark:shadow-none dark:ring-noche-700';
+const celda = 'px-5 py-4 md:px-6';
+const { detalle } = textos;
+
+const formatoFecha = new Intl.DateTimeFormat('es-CR', { day: 'numeric', month: 'short', year: 'numeric' });
+const formatoMes = new Intl.DateTimeFormat('es-CR', { month: 'long', year: 'numeric' });
+const fecha = (iso: string) => formatoFecha.format(new Date(`${iso}T12:00:00`));
+const mes = (iso: string) => formatoMes.format(new Date(`${iso}-15T12:00:00`));
+---
+<div>
+  <h1 class="text-3xl font-bold md:text-4xl">{textos.titulo}</h1>
+  <p class="mt-2 text-tinta-suave dark:text-noche-suave">{textos.texto}</p>
+</div>
+
+<ul class="mt-8 grid gap-4 sm:grid-cols-3">
+  {resumen.map((r) => (
+    <li class:list={[tarjeta, 'flex items-center gap-4 p-5']}>
+      <span class:list={['inline-flex size-12 shrink-0 items-center justify-center rounded-xl', r.estilo]}>
+        <Icono nombre={r.icono} class="size-6" />
+      </span>
+      <span>
+        <span class="block font-display text-3xl font-bold leading-none text-azul-800 dark:text-noche-texto">{r.valor}</span>
+        <span class="mt-1 block text-sm text-tinta-suave dark:text-noche-suave">{r.etiqueta}</span>
+      </span>
+    </li>
+  ))}
+</ul>
+
+<section class:list={[tarjeta, 'mt-6 overflow-hidden']} aria-label={textos.titulo} data-clientes>
+  <div class="flex flex-wrap items-center justify-between gap-4 border-b border-borde px-5 py-4 md:px-6 dark:border-noche-700">
+    <div class="flex flex-wrap gap-2">
+      {textos.filtros.map((filtro, i) => (
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold text-tinta-suave transition-colors hover:bg-fondo-suave hover:text-azul-700 aria-pressed:bg-azul-600 aria-pressed:text-white dark:text-noche-suave dark:hover:bg-noche-800 dark:hover:text-white dark:aria-pressed:bg-acento"
+          aria-pressed={i === 0 ? 'true' : 'false'}
+          data-clientes-filtro={filtro.id}
+        >
+          {filtro.etiqueta}
+          <span class="text-xs opacity-80">{totales[filtro.id]}</span>
+        </button>
+      ))}
+    </div>
+    <label class="relative block w-full sm:w-72">
+      <span class="sr-only">{textos.buscar}</span>
+      <Icono nombre="buscar" class="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-azul-300 dark:text-noche-suave" />
+      <input
+        type="search"
+        placeholder={textos.buscar}
+        autocomplete="off"
+        class="w-full rounded-full border border-borde bg-fondo-suave py-2.5 pr-4 pl-11 text-sm text-tinta placeholder:text-tinta-suave/70 transition-colors hover:border-azul-200 focus:border-celeste-400 focus:bg-white focus:outline-none dark:border-noche-700 dark:bg-noche-800 dark:text-noche-texto dark:placeholder:text-noche-suave/70 dark:hover:border-noche-600 dark:focus:border-acento dark:focus:bg-noche-800"
+        data-clientes-buscar
+      />
+    </label>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full min-w-[40rem] text-left text-sm">
+      <thead class="text-xs font-semibold uppercase tracking-[0.12em] text-tinta-suave dark:text-noche-suave">
+        <tr class="border-b border-borde dark:border-noche-700">
+          <th scope="col" class:list={[celda, 'py-3 md:py-3']} aria-sort="ascending" data-clientes-columna-nombre>
+            <button
+              type="button"
+              class="inline-flex items-center gap-1.5 uppercase tracking-[0.12em] transition-colors hover:text-azul-700 dark:hover:text-white"
+              title={textos.ordenar}
+              data-clientes-ordenar
+            >
+              {textos.columnas.cliente}
+              <Icono nombre="ordenar" class="size-3.5" />
+            </button>
+          </th>
+          <th scope="col" class:list={[celda, 'py-3 md:py-3']}>{textos.columnas.estado}</th>
+          <th scope="col" class:list={[celda, 'py-3 md:py-3']}>{textos.columnas.descripcion}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-borde dark:divide-noche-700" data-clientes-lista>
+        {ordenados.map((c) => {
+          const nombreCompleto = `${c.nombre} ${c.apellido}`;
+          return (
+            <tr
+              class="cursor-pointer transition-colors hover:bg-fondo-suave dark:hover:bg-noche-800"
+              data-cliente={c.id}
+              data-estado={c.estado}
+              data-nombre={nombreCompleto}
+              data-busqueda={normalizar(`${nombreCompleto} ${c.descripcion}`)}
+            >
+              <td class={celda}>
+                <div class="flex items-center gap-3">
+                  <span aria-hidden="true" class="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-azul-50 text-sm font-bold text-azul-700 ring-1 ring-azul-100 dark:bg-noche-800 dark:text-noche-texto dark:ring-noche-700">
+                    {`${c.nombre[0]}${c.apellido[0]}`}
+                  </span>
+                  <button
+                    type="button"
+                    class="font-semibold whitespace-nowrap text-azul-800 underline-offset-4 hover:text-azul-600 hover:underline dark:text-noche-texto dark:hover:text-celeste-300"
+                    aria-haspopup="dialog"
+                    aria-controls={`cliente-${c.id}`}
+                    aria-label={`${textos.verDetalles} ${nombreCompleto}`}
+                    data-abrir-cliente={c.id}
+                  >
+                    {nombreCompleto}
+                  </button>
+                </div>
+              </td>
+              <td class={celda}>
+                <span class:list={['inline-flex rounded-full px-3 py-1 text-xs font-semibold ring-1', estiloEstado[c.estado]]}>
+                  {estadosCliente[c.estado]}
+                </span>
+              </td>
+              <td class:list={[celda, 'max-w-xl text-tinta-suave dark:text-noche-suave']}>{c.descripcion}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="hidden px-6 py-14 text-center text-tinta-suave dark:text-noche-suave" data-clientes-vacio>
+    <Icono nombre="buscar" class="mx-auto mb-3 size-8 text-azul-200 dark:text-noche-700" />
+    {textos.vacio}
+  </p>
+
+  <p class="border-t border-borde px-5 py-3 text-xs font-medium text-tinta-suave md:px-6 dark:border-noche-700 dark:text-noche-suave" aria-live="polite" data-clientes-conteo>
+    {textos.mostrando(total, total)}
+  </p>
+</section>
+
+<!-- Ventanas de detalle: una por cliente (se abren desde la tabla). -->
+{ordenados.map((c) => {
+  const nombreCompleto = `${c.nombre} ${c.apellido}`;
+  return (
+    <dialog
+      id={`cliente-${c.id}`}
+      class="dialogo-panel m-auto max-h-[calc(100dvh-2rem)] w-[min(40rem,calc(100%-2rem))] overflow-y-auto overscroll-contain rounded-[1.75rem] bg-white p-0 text-tinta shadow-elevada dark:bg-noche-850 dark:text-noche-texto dark:ring-1 dark:ring-noche-700"
+      aria-labelledby={`cliente-${c.id}-titulo`}
+      data-cliente-dialogo
+    >
+      <div class="relative overflow-hidden bg-gradient-to-br from-azul-600 via-azul-700 to-azul-800 px-6 py-7 text-white md:px-8">
+        <div aria-hidden="true" class="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-celeste-400/30 blur-2xl"></div>
+        <button type="button" class="absolute top-4 right-4 z-10 inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label={detalle.cerrar} data-cerrar-dialogo>
+          <Icono nombre="cerrar" class="size-5" />
+        </button>
+        <div class="relative flex items-center gap-4 pr-10">
+          <span aria-hidden="true" class="inline-flex size-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-xl font-bold ring-1 ring-white/25">
+            {`${c.nombre[0]}${c.apellido[0]}`}
+          </span>
+          <div class="min-w-0">
+            <h2 id={`cliente-${c.id}-titulo`} class="truncate text-2xl font-bold text-white md:text-3xl">{nombreCompleto}</h2>
+            <span class="mt-2 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/25">{estadosCliente[c.estado]}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 pt-6 pb-7 md:px-8">
+        <dl class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-celeste-600 dark:text-celeste-300">{detalle.servicio}</dt>
+            <dd class="mt-1 font-semibold text-azul-800 dark:text-noche-texto">{c.servicio}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-celeste-600 dark:text-celeste-300">{detalle.desde}</dt>
+            <dd class="mt-1 font-semibold text-azul-800 first-letter:uppercase dark:text-noche-texto">{mes(c.desde)}</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-celeste-600 dark:text-celeste-300">{detalle.descripcion}</dt>
+            <dd class="mt-1 text-tinta-suave dark:text-noche-suave">{c.descripcion}</dd>
+          </div>
+        </dl>
+
+        <div class="mt-7 border-t border-borde pt-6 dark:border-noche-700">
+          <h3 class="flex items-center gap-2 text-lg font-bold">
+            {detalle.documentos}
+            <span class="rounded-full bg-azul-50 px-2.5 py-0.5 text-xs font-semibold text-azul-700 dark:bg-noche-800 dark:text-noche-texto">{c.documentos.length}</span>
+          </h3>
+          {c.documentos.length > 0 ? (
+            <ul class="mt-4 space-y-3">
+              {c.documentos.map((doc) => (
+                <li class="flex items-center gap-3 rounded-2xl bg-fondo-suave p-3 ring-1 ring-borde sm:gap-4 sm:p-4 dark:bg-noche-800 dark:ring-noche-700">
+                  <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-azul-600 ring-1 ring-borde dark:bg-noche-850 dark:text-celeste-300 dark:ring-noche-700">
+                    <Icono nombre="documento" class="size-5" />
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate font-semibold text-azul-800 dark:text-noche-texto">{doc.nombre}</p>
+                    <p class="text-xs text-tinta-suave dark:text-noche-suave">{detalle.formato} · {fecha(doc.fecha)}</p>
+                  </div>
+                  <a
+                    href={url(documentoEjemplo)}
+                    download={`${aNombreArchivo(`${doc.nombre} ${nombreCompleto}`)}.pdf`}
+                    class="inline-flex shrink-0 items-center gap-2 rounded-full bg-azul-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-azul-700 sm:px-4 dark:bg-acento dark:hover:bg-azul-500"
+                    aria-label={`${detalle.descargar} ${doc.nombre}`}
+                  >
+                    <Icono nombre="descargar" class="size-4" />
+                    <span class="hidden sm:inline">{detalle.descargar}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-4 rounded-2xl bg-fondo-suave px-4 py-6 text-center text-sm text-tinta-suave dark:bg-noche-800 dark:text-noche-suave">{detalle.sinDocumentos}</p>
+          )}
+        </div>
+      </div>
+    </dialog>
+  );
+})}
