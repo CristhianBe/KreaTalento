@@ -85,6 +85,9 @@ export const textosAgenda = {
   citas: 'citas',
   /** "+2 más" cuando un día tiene más citas de las que caben en la celda. */
   mas: 'más',
+  /** Vista ampliada: segundo clic sobre el día elegido (solo pantallas medianas o más). */
+  pistaAmpliar: 'Haz clic otra vez en el día elegido para acercarlo.',
+  volverMes: 'Ver todo el mes',
 };
 
 /** Tipos de cita: cada uno tiene su color en la agenda (`scripts/panel/agenda.ts`). */

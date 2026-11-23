@@ -350,3 +350,15 @@
   animation: none;
   mix-blend-mode: normal;
 }
+
+/* Agenda: vista ampliada (el transform lo calcula scripts/panel/agenda.ts) */
+@layer components {
+  .agenda-grid { transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1); }
+  .agenda-grid > * { transition: opacity 0.5s, filter 0.5s; }
+  .agenda-grid[data-ampliado='true'] > :not([aria-pressed='true']) { opacity: 0.35; filter: blur(1px); }
+  .agenda-volver:not([hidden]) { animation: panel-subir 0.4s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @media (prefers-reduced-motion: reduce) {
+    .agenda-grid, .agenda-grid > * { transition: none; }
+    .agenda-volver:not([hidden]) { animation: none; }
+  }
+}

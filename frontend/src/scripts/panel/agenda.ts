@@ -154,6 +154,13 @@ export function iniciarAgenda() {
     }
 
     boton.addEventListener('click', () => {
+      // Segundo clic sobre el día elegido: acercar / alejar (vista ampliada).
+      if (mismoDia(fecha, seleccionado) && puedeAmpliar()) {
+        if (ampliado) alejar();
+        else ampliar(boton);
+        return;
+      }
+      if (ampliado) alejar();
       seleccionado = fecha;
       pintarMes();
       pintarDia(true);
@@ -191,7 +198,47 @@ export function iniciarAgenda() {
     elementos.proximasVacio.classList.toggle('hidden', proximas.length > 0);
   };
 
+  /* ---------- Vista ampliada (inspirada en un calendario que hace zoom al día elegido) ---------- */
+  const ventana = raiz.querySelector<HTMLElement>('[data-agenda-ventana]');
+  const volver = raiz.querySelector<HTMLButtonElement>('[data-agenda-volver]');
+  const escritorio = matchMedia('(min-width: 768px)');
+  const puedeAmpliar = () => escritorio.matches && Boolean(ventana);
+  let ampliado = false;
+
+  /** Escala la cuadrícula para que el día quede centrado y grande dentro de la ventana. */
+  const ampliar = (celda: HTMLElement) => {
+    const { grid } = elementos;
+    const ancho = grid.clientWidth;
+    const alto = grid.clientHeight;
+    const escala = Math.min(ancho / celda.offsetWidth, alto / celda.offsetHeight) * 0.6;
+    // offsetLeft/Top se miden desde la ventana (tiene relleno): se resta la posición de la cuadrícula.
+    const centroX = celda.offsetLeft - grid.offsetLeft + celda.offsetWidth / 2;
+    const centroY = celda.offsetTop - grid.offsetTop + celda.offsetHeight / 2;
+    grid.style.transform = `translate(${ancho / 2 - centroX * escala}px, ${alto / 2 - centroY * escala}px) scale(${escala})`;
+    grid.dataset.ampliado = 'true';
+    ampliado = true;
+    if (volver) volver.hidden = false;
+  };
+
+  /** Vuelve a la vista de todo el mes. `enfocar`: devuelve el foco al día elegido. */
+  const alejar = (enfocar = false) => {
+    if (!ampliado) return;
+    elementos.grid.style.transform = '';
+    elementos.grid.dataset.ampliado = 'false';
+    ampliado = false;
+    if (volver) volver.hidden = true;
+    if (enfocar) elementos.grid.querySelector<HTMLElement>('[aria-pressed="true"]')?.focus();
+  };
+
+  volver?.addEventListener('click', () => alejar(true));
+  raiz.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && ampliado) alejar(true);
+  });
+  // Si cambia el tamaño, las medidas ya no sirven: vuelve al mes completo.
+  window.addEventListener('resize', () => alejar());
+
   const cambiarMes = (salto: -1 | 1) => {
+    alejar();
     mes = new Date(mes.getFullYear(), mes.getMonth() + salto, 1);
     pintarMes();
     animarMes(elementos.grid, elementos.mes, salto);
@@ -200,6 +247,7 @@ export function iniciarAgenda() {
   raiz.querySelector('[data-agenda-anterior]')?.addEventListener('click', () => cambiarMes(-1));
   raiz.querySelector('[data-agenda-siguiente]')?.addEventListener('click', () => cambiarMes(1));
   raiz.querySelector('[data-agenda-hoy]')?.addEventListener('click', () => {
+    alejar();
     const otroMes = mes.getTime() !== new Date(hoy.getFullYear(), hoy.getMonth(), 1).getTime();
     const direccion = mes < hoy ? 1 : -1;
     mes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
