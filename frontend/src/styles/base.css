@@ -119,6 +119,30 @@
   }
   /* Cuando GSAP anima la ventana, desactiva la animación CSS por defecto */
   .dialogo-servicio.animado[open] { animation: none; }
+
+  /* Campos de formulario (login) */
+  .campo {
+    width: 100%;
+    border: 1px solid var(--color-borde);
+    border-radius: 1rem;
+    background-color: var(--color-fondo-suave);
+    padding: 0.85rem 1.1rem;
+    color: var(--color-tinta);
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  }
+  .campo::placeholder { color: var(--color-tinta-suave); opacity: 0.6; }
+  .campo:hover { border-color: var(--color-azul-200); }
+  .campo:focus {
+    outline: none;
+    border-color: var(--color-celeste-400);
+    background-color: var(--color-fondo);
+    box-shadow: 0 0 0 4px rgb(79 182 232 / 0.2);
+  }
+  .campo[aria-invalid='true'] {
+    border-color: var(--color-error);
+    background-color: var(--color-error-suave);
+  }
+  .campo[aria-invalid='true']:focus { box-shadow: 0 0 0 4px rgb(180 35 60 / 0.15); }
 }
 
 /* ---------- Efectos inspirados en React Bits (reescritos en CSS/GSAP) ---------- */

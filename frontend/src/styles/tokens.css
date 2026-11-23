@@ -32,6 +32,10 @@
   --color-fondo: #ffffff;
   --color-fondo-suave: #f5f9fd;
 
+  /* Mensajes de error de formularios (rojo; no es negro, verde ni amarillo) */
+  --color-error: #b4233c;
+  --color-error-suave: #fdf1f3;
+
   --font-sans: 'Manrope', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Manrope', ui-sans-serif, system-ui, sans-serif;
 

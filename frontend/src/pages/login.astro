@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Login from '../components/sections/Login.astro';
+import { login } from '../data/login';
+---
+<BaseLayout titulo={login.titulo} animaciones={false}>
+  <Login />
+</BaseLayout>

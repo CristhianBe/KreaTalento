@@ -3,6 +3,8 @@ import Logo from './Logo.astro';
 import Icono from '../ui/Icono.astro';
 import { sitio, navegacion } from '../../data/sitio';
 import { contacto } from '../../data/contacto';
+import { enlaceSeccion } from '../../lib/url';
+const ruta = Astro.url.pathname;
 const redes = Object.entries(contacto.redes).filter(([, enlace]) => enlace);
 const anio = new Date().getFullYear();
 ---
@@ -15,7 +17,7 @@ const anio = new Date().getFullYear();
     <nav aria-label="Pie de página">
       <p class="mb-3 text-sm font-semibold text-white">Navegación</p>
       <ul class="space-y-2 text-sm">
-        {navegacion.map((item) => <li><a href={item.href} class="hover:text-white">{item.etiqueta}</a></li>)}
+        {navegacion.map((item) => <li><a href={enlaceSeccion(item.href, ruta)} class="hover:text-white">{item.etiqueta}</a></li>)}
       </ul>
     </nav>
     <div>

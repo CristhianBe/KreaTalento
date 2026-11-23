@@ -7,13 +7,18 @@ import Intro from '../components/ui/Intro.astro';
 import { sitio } from '../data/sitio';
 import { url } from '../lib/url';
 
-interface Props { titulo?: string; descripcion?: string }
-const { titulo, descripcion = sitio.descripcion } = Astro.props;
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  /** false: página sin intro ni animaciones GSAP/Lenis (p. ej. login). */
+  animaciones?: boolean;
+}
+const { titulo, descripcion = sitio.descripcion, animaciones = true } = Astro.props;
 const tituloCompleto = titulo ? `${titulo} · ${sitio.nombre}` : `${sitio.nombre} · ${sitio.lema}`;
 const canonica = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
-<html lang={sitio.idioma}>
+<html lang={sitio.idioma} data-sin-animaciones={animaciones ? undefined : ''}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,9 +37,11 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <script is:inline>
-      // Muestra la intro solo en la primera visita de la sesión y si se permite movimiento.
+      // Muestra la intro solo en la primera visita de la sesión, si se permite movimiento
+      // y si la página tiene animaciones.
       try {
-        if (!sessionStorage.getItem('kt-intro') && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        const conAnimaciones = !document.documentElement.hasAttribute('data-sin-animaciones');
+        if (conAnimaciones && !sessionStorage.getItem('kt-intro') && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
           document.documentElement.classList.add('con-intro');
           sessionStorage.setItem('kt-intro', '1');
         }
@@ -42,7 +49,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body>
-    <Intro />
+    {animaciones && <Intro />}
     <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-full focus:bg-azul-600 focus:px-5 focus:py-2 focus:text-white">Saltar al contenido</a>
     <Header />
     <main id="contenido">

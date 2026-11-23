@@ -2,6 +2,10 @@
 import Logo from './Logo.astro';
 import Icono from '../ui/Icono.astro';
 import { navegacion } from '../../data/sitio';
+import { login } from '../../data/login';
+import { url, esRuta, enlaceSeccion } from '../../lib/url';
+const ruta = Astro.url.pathname;
+const enLogin = esRuta(ruta, login.ruta);
 ---
 <header id="encabezado" class="group fixed inset-x-0 top-0 z-50 border-b border-transparent bg-white/85 backdrop-blur-md transition-[border-color,box-shadow] duration-300 data-[scrolled=true]:border-borde data-[scrolled=true]:shadow-suave">
   <div class="contenedor flex h-20 items-center justify-between transition-[height] duration-300 group-data-[scrolled=true]:h-16">
@@ -10,27 +14,46 @@ import { navegacion } from '../../data/sitio';
       <ul class="flex items-center gap-8">
         {navegacion.map((item) => (
           <li>
-            <a href={item.href} class="enlace-nav relative text-[0.95rem] font-medium text-tinta-suave transition-colors hover:text-azul-600">{item.etiqueta}</a>
+            <a href={enlaceSeccion(item.href, ruta)} class="enlace-nav relative text-[0.95rem] font-medium text-tinta-suave transition-colors hover:text-azul-600">{item.etiqueta}</a>
           </li>
         ))}
       </ul>
     </nav>
-    <button
-      id="boton-menu"
-      type="button"
-      class="inline-flex size-11 items-center justify-center rounded-full text-azul-700 hover:bg-azul-50 md:hidden"
-      aria-expanded="false"
-      aria-controls="menu-movil"
-      aria-label="Abrir menú"
-    >
-      <Icono nombre="menu" class="size-6 icono-abrir" />
-      <Icono nombre="cerrar" class="size-6 icono-cerrar hidden" />
-    </button>
+    <div class="flex items-center gap-1 md:gap-0">
+      {!enLogin && (
+        <>
+          <a
+            href={url(login.ruta)}
+            class="hidden items-center gap-2 rounded-full bg-white px-5 py-2.5 text-[0.95rem] font-semibold text-azul-700 ring-1 ring-azul-200 transition-colors duration-200 hover:bg-azul-50 hover:ring-azul-400 md:inline-flex"
+          >
+            <Icono nombre="usuario" class="size-4" />{login.boton}
+          </a>
+          <a
+            href={url(login.ruta)}
+            class="inline-flex size-11 items-center justify-center rounded-full text-azul-700 hover:bg-azul-50 md:hidden"
+            aria-label={login.boton}
+          >
+            <Icono nombre="usuario" class="size-6" />
+          </a>
+        </>
+      )}
+      <button
+        id="boton-menu"
+        type="button"
+        class="inline-flex size-11 items-center justify-center rounded-full text-azul-700 hover:bg-azul-50 md:hidden"
+        aria-expanded="false"
+        aria-controls="menu-movil"
+        aria-label="Abrir menú"
+      >
+        <Icono nombre="menu" class="size-6 icono-abrir" />
+        <Icono nombre="cerrar" class="size-6 icono-cerrar hidden" />
+      </button>
+    </div>
   </div>
   <nav id="menu-movil" aria-label="Principal (móvil)" class="hidden border-t border-borde bg-white md:hidden">
     <ul class="contenedor flex flex-col py-3">
       {navegacion.map((item) => (
-        <li><a href={item.href} class="block py-3 text-lg font-medium text-azul-800">{item.etiqueta}</a></li>
+        <li><a href={enlaceSeccion(item.href, ruta)} class="block py-3 text-lg font-medium text-azul-800">{item.etiqueta}</a></li>
       ))}
     </ul>
   </nav>
