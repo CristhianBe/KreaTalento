@@ -67,6 +67,16 @@ export function iniciarLogin() {
     if (textoEnviar) textoEnviar.textContent = si ? login.enviando : login.enviar;
   };
 
+  // Sacudida suave del formulario cuando los datos no son correctos (el CSS la anula con "reducir movimiento").
+  const sacudir = () => {
+    formulario.classList.remove('login-sacudir');
+    void formulario.offsetWidth; // reinicia la animación si se repite
+    formulario.classList.add('login-sacudir');
+  };
+  formulario.addEventListener('animationend', (e) => {
+    if (e.target === formulario) formulario.classList.remove('login-sacudir');
+  });
+
   // Al corregir un campo con error, el mensaje se actualiza mientras se escribe.
   (Object.keys(campos) as Campo[]).forEach((campo) => {
     campos[campo].addEventListener('input', () => {
@@ -111,6 +121,7 @@ export function iniciarLogin() {
     if (respuesta.ok) return irAlPanel(); // el botón sigue en "Ingresando…" mientras cambia de página
     ocupado(false);
     mostrarEstado(respuesta.mensaje);
+    sacudir();
     campos.contrasena.select();
   });
 }

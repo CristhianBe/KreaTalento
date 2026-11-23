@@ -13,6 +13,7 @@ import { animarTarjetas, inclinarTarjetas } from './animations/tarjetas';
 import { animarProceso } from './animations/proceso';
 import { animarRotativo } from './animations/rotativo';
 import { animarCinta } from './animations/cinta';
+import { focoLogin } from './animations/login';
 import { barraProgreso, parallax, animarContacto, botonesMagneticos } from './animations/extras';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -55,3 +56,6 @@ if (conAnimaciones) {
     return () => quitar.forEach((f) => f?.());
   });
 }
+
+// Login (página sin intro ni Lenis): solo la luz que sigue al puntero; lo demás es CSS.
+mm.add('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)', () => focoLogin());
