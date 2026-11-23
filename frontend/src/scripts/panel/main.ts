@@ -6,7 +6,8 @@ import { iniciarNotificaciones } from './notificaciones';
 import { iniciarAgenda } from './agenda';
 import { iniciarClientes } from './clientes';
 
-// Panel administrativo: solo funcionalidad, sin animaciones por ahora.
+// Panel administrativo. Las animaciones (sutiles) están en ./animaciones.ts y en las clases
+// `.panel-*` de base.css; todas respetan "reducir movimiento".
 // Cada función revisa si su sección existe en la página y, si no, no hace nada.
 iniciarSesionPanel();
 iniciarTema();

@@ -1,4 +1,5 @@
 import { citas, textosAgenda as textos, type TipoCita } from '../../data/panel';
+import { animarEntrada, animarMes, rebotar } from './animaciones';
 
 const formatoMes = new Intl.DateTimeFormat('es-CR', { month: 'long', year: 'numeric' });
 const formatoDia = new Intl.DateTimeFormat('es-CR', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -114,8 +115,18 @@ export function iniciarAgenda() {
       `${formatoDia.format(fecha)}${cantidad ? `, ${cantidad} ${cantidad === 1 ? textos.cita : textos.citas}` : ''}`,
     );
 
-    const numero = crear('span', 'text-sm font-bold md:text-base');
+    const numero = crear('span', 'inline-flex items-center gap-1.5 text-sm font-bold md:text-base');
     numero.textContent = String(fecha.getDate());
+    // Hoy (si no está elegido): punto celeste que late suavemente.
+    if (esHoy && !elegido) {
+      const punto = crear('span', 'relative flex size-2');
+      punto.setAttribute('aria-hidden', 'true');
+      punto.append(
+        crear('span', 'absolute inline-flex size-full rounded-full bg-celeste-400 opacity-75 motion-safe:animate-ping'),
+        crear('span', 'relative inline-flex size-2 rounded-full bg-celeste-500'),
+      );
+      numero.append(punto);
+    }
     boton.append(numero);
 
     if (cantidad) {
@@ -145,17 +156,21 @@ export function iniciarAgenda() {
     boton.addEventListener('click', () => {
       seleccionado = fecha;
       pintarMes();
-      pintarDia();
-      elementos.grid.querySelector<HTMLElement>('[aria-pressed="true"]')?.focus();
+      pintarDia(true);
+      const elegido = elementos.grid.querySelector<HTMLElement>('[aria-pressed="true"]');
+      elegido?.focus();
+      rebotar(elegido);
     });
     return boton;
   };
 
-  const pintarDia = () => {
+  /** `animar`: las citas del día aparecen en cascada (al elegir otro día). */
+  const pintarDia = (animar = false) => {
     const delDia = citasDel(seleccionado);
     elementos.diaTitulo.textContent = formatoDia.format(seleccionado);
     elementos.diaLista.replaceChildren(...delDia.map((cita) => crearCita(cita, false)));
     elementos.diaVacio.classList.toggle('hidden', delDia.length > 0);
+    if (animar) animarEntrada([elementos.diaTitulo, ...elementos.diaLista.children, ...(delDia.length ? [] : [elementos.diaVacio])]);
   };
 
   const pintarMes = () => {
@@ -176,21 +191,29 @@ export function iniciarAgenda() {
     elementos.proximasVacio.classList.toggle('hidden', proximas.length > 0);
   };
 
-  const cambiarMes = (salto: number) => {
+  const cambiarMes = (salto: -1 | 1) => {
     mes = new Date(mes.getFullYear(), mes.getMonth() + salto, 1);
     pintarMes();
+    animarMes(elementos.grid, elementos.mes, salto);
   };
 
   raiz.querySelector('[data-agenda-anterior]')?.addEventListener('click', () => cambiarMes(-1));
   raiz.querySelector('[data-agenda-siguiente]')?.addEventListener('click', () => cambiarMes(1));
   raiz.querySelector('[data-agenda-hoy]')?.addEventListener('click', () => {
+    const otroMes = mes.getTime() !== new Date(hoy.getFullYear(), hoy.getMonth(), 1).getTime();
+    const direccion = mes < hoy ? 1 : -1;
     mes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
     seleccionado = hoy;
     pintarMes();
-    pintarDia();
+    pintarDia(true);
+    if (otroMes) animarMes(elementos.grid, elementos.mes, direccion);
+    else rebotar(elementos.grid.querySelector('[aria-pressed="true"]'));
   });
 
   pintarMes();
   pintarDia();
   pintarProximas();
+  // Primera carga: los días aparecen en cascada y luego las citas.
+  animarMes(elementos.grid, elementos.mes, 0);
+  animarEntrada([...elementos.diaLista.children, ...elementos.proximas.children], 0.2);
 }

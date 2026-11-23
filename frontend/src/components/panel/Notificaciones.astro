@@ -41,10 +41,10 @@ const estilos: Record<TipoNotificacion, { icono: string; etiqueta: string }> = {
   </div>
 
   <ul class="divide-y divide-borde dark:divide-noche-700" data-notif-lista>
-    {notificaciones.map((n) => {
+    {notificaciones.map((n, i) => {
       const tipo = tiposNotificacion[n.tipo];
       return (
-        <li class="group flex gap-4 px-5 py-5 transition-colors data-[leida=false]:bg-celeste-50/50 md:px-6 dark:data-[leida=false]:bg-celeste-500/10" data-notificacion={n.id} data-leida={String(n.leida)}>
+        <li style={`--i: ${i}`} class="panel-item group flex gap-4 px-5 py-5 transition-colors duration-500 data-[leida=false]:bg-celeste-50/50 md:px-6 dark:data-[leida=false]:bg-celeste-500/10" data-notificacion={n.id} data-leida={String(n.leida)}>
           <span class:list={['inline-flex size-11 shrink-0 items-center justify-center rounded-xl', estilos[n.tipo].icono]}>
             <Icono nombre={tipo.icono} class="size-5" />
           </span>

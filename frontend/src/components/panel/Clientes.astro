@@ -39,13 +39,13 @@ const mes = (iso: string) => formatoMes.format(new Date(`${iso}-15T12:00:00`));
 </div>
 
 <ul class="mt-8 grid gap-4 sm:grid-cols-3">
-  {resumen.map((r) => (
-    <li class:list={[tarjeta, 'flex items-center gap-4 p-5']}>
-      <span class:list={['inline-flex size-12 shrink-0 items-center justify-center rounded-xl', r.estilo]}>
+  {resumen.map((r, i) => (
+    <li style={`--i: ${i}`} class:list={[tarjeta, 'panel-item group flex items-center gap-4 p-5 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-elevada dark:hover:shadow-none']}>
+      <span class:list={['inline-flex size-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6', r.estilo]}>
         <Icono nombre={r.icono} class="size-6" />
       </span>
       <span>
-        <span class="block font-display text-3xl font-bold leading-none text-azul-800 dark:text-noche-texto">{r.valor}</span>
+        <span class="block font-display text-3xl font-bold leading-none tabular-nums text-azul-800 dark:text-noche-texto" data-contar>{r.valor}</span>
         <span class="mt-1 block text-sm text-tinta-suave dark:text-noche-suave">{r.etiqueta}</span>
       </span>
     </li>
@@ -100,11 +100,12 @@ const mes = (iso: string) => formatoMes.format(new Date(`${iso}-15T12:00:00`));
         </tr>
       </thead>
       <tbody class="divide-y divide-borde dark:divide-noche-700" data-clientes-lista>
-        {ordenados.map((c) => {
+        {ordenados.map((c, i) => {
           const nombreCompleto = `${c.nombre} ${c.apellido}`;
           return (
             <tr
-              class="cursor-pointer transition-colors hover:bg-fondo-suave dark:hover:bg-noche-800"
+              style={`--i: ${Math.min(i, 12)}`}
+              class="panel-item cursor-pointer transition-colors hover:bg-fondo-suave dark:hover:bg-noche-800"
               data-cliente={c.id}
               data-estado={c.estado}
               data-nombre={nombreCompleto}

@@ -1,7 +1,8 @@
 ---
 /**
  * Layout del panel administrativo: barra lateral + barra superior, sin el encabezado
- * ni el pie del sitio público y sin animaciones. Si no hay sesión de prueba, manda al login.
+ * ni el pie del sitio público. Animaciones sutiles: entrada escalonada del contenido (`.panel-entrada`)
+ * y efectos en `scripts/panel/animaciones.ts`. Si no hay sesión de prueba, manda al login.
  * Modo noche: `<html data-tema="oscuro">` activa las clases `dark:` (solo existe en el panel).
  * `scrollbar-gutter: stable` reserva siempre el espacio de la barra de scroll: así el contenido
  * no se corre de lado cuando una sección crece al cargar (p. ej. la agenda).
@@ -64,7 +65,7 @@ const rutaLogin = url(login.ruta);
       <div class="flex min-h-dvh min-w-0 flex-col">
         <BarraSuperior />
         <main id="contenido" class="flex-1 px-5 py-8 md:px-8 md:py-10">
-          <div class="mx-auto max-w-6xl">
+          <div class="panel-entrada mx-auto max-w-6xl">
             <slot />
           </div>
         </main>

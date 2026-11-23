@@ -1,4 +1,5 @@
 import { claveTema } from '../../lib/tema';
+import { transicionTema } from './animaciones';
 
 /**
  * Modo noche del panel. El tema inicial lo pone el script en línea de PanelLayout
@@ -20,7 +21,8 @@ export function iniciarTema() {
   botones.forEach((boton) => {
     boton.addEventListener('click', () => {
       const oscuro = raiz.dataset.tema !== 'oscuro';
-      aplicar(oscuro);
+      // El nuevo tema se abre como un círculo desde el botón.
+      transicionTema(boton, () => aplicar(oscuro));
       try {
         localStorage.setItem(claveTema, oscuro ? 'oscuro' : 'claro');
       } catch {}

@@ -1,5 +1,6 @@
 import { textosClientes as textos } from '../../data/panel';
 import { normalizar } from '../../lib/texto';
+import { animarEntrada, contarNumeros } from './animaciones';
 
 /**
  * Clientes: filtro por estado, búsqueda (sin importar tildes), orden por nombre y
@@ -22,6 +23,9 @@ export function iniciarClientes() {
   let filtro = 'todos';
   let ascendente = true;
 
+  // Tarjetas de resumen: los números cuentan desde 0 (Count Up).
+  contarNumeros(document.querySelectorAll<HTMLElement>('[data-contar]'));
+
   const actualizar = () => {
     const termino = normalizar(buscador?.value ?? '');
     let visibles = 0;
@@ -40,6 +44,7 @@ export function iniciarClientes() {
       filtro = boton.dataset.clientesFiltro ?? 'todos';
       filtros.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
       actualizar();
+      animarEntrada(filas.filter((fila) => !fila.hidden));
     });
   });
 
@@ -53,6 +58,7 @@ export function iniciarClientes() {
         return ascendente ? orden : -orden;
       })
       .forEach((fila) => lista.append(fila));
+    animarEntrada(filas.filter((fila) => !fila.hidden));
     columnaNombre?.setAttribute('aria-sort', ascendente ? 'ascending' : 'descending');
   });
 

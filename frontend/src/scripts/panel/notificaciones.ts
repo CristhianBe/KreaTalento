@@ -1,4 +1,5 @@
 import { claveNotifLeidas as claveLeidas } from '../../lib/panel';
+import { animarEntrada, rebotar } from './animaciones';
 
 /*
  * El estado inicial (contador, leídas y totales) lo ponen los scripts en línea de
@@ -22,6 +23,7 @@ function guardarLeidas(ids: Set<string>) {
 /** Actualiza el número de la barra lateral (se oculta en 0). */
 function mostrarContador(noLeidas: number) {
   document.querySelectorAll<HTMLElement>('[data-contador-notificaciones]').forEach((el) => {
+    if (el.textContent !== String(noLeidas) && noLeidas > 0) rebotar(el);
     el.textContent = String(noLeidas);
     el.classList.toggle('hidden', noLeidas === 0);
   });
@@ -80,6 +82,7 @@ export function iniciarNotificaciones() {
       filtro = boton.dataset.notifFiltro ?? 'todas';
       filtros.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
       actualizar();
+      animarEntrada(items.filter((item) => !item.hidden));
     });
   });
 
