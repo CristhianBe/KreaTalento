@@ -1,0 +1,8 @@
+---
+import PanelLayout from '../../layouts/PanelLayout.astro';
+import Agenda from '../../components/panel/Agenda.astro';
+import { textosAgenda } from '../../data/panel';
+---
+<PanelLayout titulo={textosAgenda.titulo} activo="agenda">
+  <Agenda />
+</PanelLayout>

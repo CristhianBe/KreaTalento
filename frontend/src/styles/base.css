@@ -24,6 +24,10 @@
 
   p { text-wrap: pretty; }
 
+  /* Modo noche (panel): controles nativos y títulos en claro */
+  [data-tema='oscuro'] { color-scheme: dark; }
+  [data-tema='oscuro'] :is(h1, h2, h3, h4) { color: var(--color-noche-texto); }
+
   ::selection {
     background: var(--color-celeste-200);
     color: var(--color-azul-900);

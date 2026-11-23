@@ -1,19 +1,32 @@
 import { login } from '../data/login';
+import { usuariosPrueba, contrasenaPrueba } from '../data/usuarios-prueba';
+import { guardarSesion, obtenerSesion } from '../lib/sesion';
+import { url } from '../lib/url';
 
 type Campo = 'correo' | 'contrasena';
 
 /**
- * Envío de las credenciales. Fase 2: reemplazar por la llamada real al backend
- * (devolver `{ ok: true }` y redirigir al portal). Nunca guardar ni mostrar la contraseña.
+ * Revisa las credenciales. Por ahora compara contra los usuarios de PRUEBA (solo frontend).
+ * Fase 2: reemplazar por la llamada real al backend. Nunca guardar ni mostrar la contraseña.
  */
-async function enviarCredenciales(_datos: { correo: string; contrasena: string }): Promise<{ ok: boolean; mensaje: string }> {
-  return { ok: false, mensaje: login.mensajes.noDisponible };
+async function enviarCredenciales(datos: { correo: string; contrasena: string }): Promise<{ ok: boolean; mensaje: string }> {
+  const usuario = usuariosPrueba.find((u) => u.correo === datos.correo.toLowerCase());
+  if (!usuario || datos.contrasena !== contrasenaPrueba) {
+    return { ok: false, mensaje: login.mensajes.credencialesInvalidas };
+  }
+  guardarSesion({ correo: usuario.correo, nombre: usuario.nombre });
+  return { ok: true, mensaje: '' };
 }
+
+const irAlPanel = () => window.location.replace(url(login.rutaPanel));
 
 /** Formulario de inicio de sesión: validación, mostrar/ocultar contraseña y envío (no son animaciones: funcionan siempre). */
 export function iniciarLogin() {
   const formulario = document.querySelector<HTMLFormElement>('[data-login]');
   if (!formulario) return;
+
+  // Si ya hay una sesión abierta, no tiene sentido volver a pedir los datos.
+  if (obtenerSesion()) return irAlPanel();
 
   const campos = {
     correo: formulario.querySelector<HTMLInputElement>('#correo')!,
@@ -91,14 +104,13 @@ export function iniciarLogin() {
     }
 
     ocupado(true);
-    try {
-      const respuesta = await enviarCredenciales({
-        correo: campos.correo.value.trim(),
-        contrasena: campos.contrasena.value,
-      });
-      if (!respuesta.ok) mostrarEstado(respuesta.mensaje);
-    } finally {
-      ocupado(false);
-    }
+    const respuesta = await enviarCredenciales({
+      correo: campos.correo.value.trim(),
+      contrasena: campos.contrasena.value,
+    });
+    if (respuesta.ok) return irAlPanel(); // el botón sigue en "Ingresando…" mientras cambia de página
+    ocupado(false);
+    mostrarEstado(respuesta.mensaje);
+    campos.contrasena.select();
   });
 }

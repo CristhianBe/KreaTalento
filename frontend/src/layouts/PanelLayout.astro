@@ -1,0 +1,66 @@
+---
+/**
+ * Layout del panel administrativo: barra lateral + barra superior, sin el encabezado
+ * ni el pie del sitio público y sin animaciones. Si no hay sesión de prueba, manda al login.
+ * Modo noche: `<html data-tema="oscuro">` activa las clases `dark:` (solo existe en el panel).
+ */
+import '../styles/global.css';
+import BarraLateral from '../components/panel/BarraLateral.astro';
+import BarraSuperior from '../components/panel/BarraSuperior.astro';
+import { sitio } from '../data/sitio';
+import { login } from '../data/login';
+import type { SeccionPanel } from '../data/panel';
+import { claveSesion } from '../lib/sesion';
+import { claveTema } from '../lib/tema';
+import { url } from '../lib/url';
+
+interface Props { titulo: string; activo: SeccionPanel }
+const { titulo, activo } = Astro.props;
+const rutaLogin = url(login.ruta);
+---
+<!doctype html>
+<html lang={sitio.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{`${titulo} · ${sitio.nombre}`}</title>
+    <link rel="icon" type="image/png" href={url('favicon.png')} />
+    <meta name="theme-color" content="#1d4f91" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script is:inline define:vars={{ claveSesion, rutaLogin, claveTema }}>
+      // Sin sesión de prueba → al login. Solo frontend: la protección real será del backend (fase 2).
+      try {
+        if (!sessionStorage.getItem(claveSesion)) location.replace(rutaLogin);
+      } catch (e) {
+        location.replace(rutaLogin);
+      }
+      // Modo noche antes de pintar (sin parpadeo): lo elegido o, si no hay, el del sistema.
+      try {
+        const guardado = localStorage.getItem(claveTema);
+        const oscuro = guardado ? guardado === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+        if (oscuro) document.documentElement.dataset.tema = 'oscuro';
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="bg-fondo-suave dark:bg-noche-950 dark:text-noche-texto">
+    <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-full focus:bg-azul-600 focus:px-5 focus:py-2 focus:text-white">Saltar al contenido</a>
+    <!-- Dos columnas en escritorio: barra lateral (18rem) + contenido. En móvil la barra es un cajón. -->
+    <div class="min-h-dvh lg:grid lg:grid-cols-[18rem_minmax(0,1fr)]">
+      <BarraLateral activo={activo} />
+      <div class="flex min-h-dvh min-w-0 flex-col">
+        <BarraSuperior titulo={titulo} />
+        <main id="contenido" class="flex-1 border-borde px-5 py-8 md:px-8 md:py-10 lg:border-l dark:border-noche-700">
+          <div class="mx-auto max-w-6xl">
+            <slot />
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+      import '../scripts/panel/main';
+    </script>
+  </body>
+</html>

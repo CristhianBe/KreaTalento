@@ -1,3 +1,9 @@
 @import 'tailwindcss';
 @import './tokens.css';
 @import './base.css';
+
+/* Todo src/ (incluye el panel): asegura que Tailwind lea las clases de los archivos nuevos. */
+@source '../';
+
+/* Modo noche: solo donde haya <html data-tema="oscuro"> (el panel). El sitio público no lo usa. */
+@custom-variant dark (&:where([data-tema='oscuro'], [data-tema='oscuro'] *));

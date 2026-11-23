@@ -1,11 +1,13 @@
 /**
  * Textos de la pantalla de inicio de sesión.
- * El sitio aún no tiene backend (fase 2): el formulario valida los datos,
- * pero todavía no inicia sesión de verdad (ver `src/scripts/login.ts`).
+ * El sitio aún no tiene backend (fase 2): por ahora el login compara contra
+ * los usuarios de prueba de `usuarios-prueba.ts` (ver `src/scripts/login.ts`).
  */
 export const login = {
   /** Ruta de la página (se le antepone el `base` con `url()`). */
   ruta: 'login',
+  /** Página a la que se entra después de iniciar sesión. */
+  rutaPanel: 'panel',
   /** Texto del botón del encabezado. */
   boton: 'Iniciar sesión',
   titulo: 'Iniciar sesión',
@@ -28,7 +30,6 @@ export const login = {
     correoVacio: 'Escribe tu correo electrónico.',
     correoInvalido: 'Revisa el correo; debe tener un formato como nombre@empresa.com.',
     contrasenaVacia: 'Escribe tu contraseña.',
-    /** Se muestra al enviar mientras no exista el backend. */
-    noDisponible: 'El acceso para clientes todavía no está habilitado. Si necesitas ayuda, contáctanos.',
+    credencialesInvalidas: 'El correo o la contraseña no son correctos. Revisa los datos e inténtalo de nuevo.',
   },
 };

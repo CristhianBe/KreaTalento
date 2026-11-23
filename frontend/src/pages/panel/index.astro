@@ -1,0 +1,8 @@
+---
+import PanelLayout from '../../layouts/PanelLayout.astro';
+import Notificaciones from '../../components/panel/Notificaciones.astro';
+import { textosNotificaciones } from '../../data/panel';
+---
+<PanelLayout titulo={textosNotificaciones.titulo} activo="notificaciones">
+  <Notificaciones />
+</PanelLayout>

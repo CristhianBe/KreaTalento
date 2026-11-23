@@ -35,6 +35,19 @@
   /* Mensajes de error de formularios (rojo; no es negro, verde ni amarillo) */
   --color-error: #b4233c;
   --color-error-suave: #fdf1f3;
+  --color-error-claro: #f4a6b5;
+
+  /* Modo noche del panel: capas de azul pizarra (nunca negro), de la más oscura a la más clara */
+  --color-noche-950: #111a28; /* fondo de la página */
+  --color-noche-900: #172233; /* columnas: barra lateral y superior */
+  --color-noche-850: #1e2b3f; /* tarjetas */
+  --color-noche-800: #26364d; /* elementos dentro de tarjetas, hover */
+  --color-noche-700: #33465f; /* bordes */
+  --color-noche-600: #45597a; /* bordes al pasar el mouse */
+  --color-noche-texto: #e8eef7; /* texto principal */
+  --color-noche-suave: #a3b4cb; /* texto secundario */
+  /* Azul principal en modo noche: más brillante para que destaque sobre fondo oscuro */
+  --color-acento: #2f8ff0;
 
   --font-sans: 'Manrope', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Manrope', ui-sans-serif, system-ui, sans-serif;
